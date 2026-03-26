@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pensummit — Mine Studienoter</title>
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a class="logo" href="/">Pensum<span>mit</span></a>
+    <nav>
+      <a href="#it-projektledelse">IT-Projektledelse</a>
+      <a href="#programmering">Programmering</a>
+      <a href="#organisation">Organisation</a>
+      <a href="#oekonomi">Økonomi</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-eyebrow">HA(it) · CBS · 2026</p>
+    <h1>Alle noter.<br><em>Ét sted.</em></h1>
+    <p class="hero-sub">Strukturerede studienoter til alle forelæsninger — klar til eksamen.</p>
+  </section>
+
+  <!-- SØGNING -->
+  <div class="search-wrap">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Søg i noter, begreber, emner…"
+        autocomplete="off"
+      />
+    </div>
+    <p id="search-count"></p>
+  </div>
+
+  <!-- FAG-GRID -->
+  <main class="fag-grid" id="fag-grid">
+
+    <!-- IT-PROJEKTLEDELSE -->
+    <div class="fag-kort fag-it open" id="it-projektledelse" data-fag="it-projektledelse">
+      <div class="fag-header" onclick="toggleFag(this)">
+        <div class="fag-header-left">
+          <div class="fag-ikon">🗂️</div>
+          <div>
+            <div class="fag-titel">IT-Projektledelse</div>
+            <div class="fag-meta" id="meta-it">0 noter</div>
+          </div>
+        </div>
+        <span class="fag-toggle">▾</span>
+      </div>
+      <div class="fag-noter-liste" id="liste-it">
+        <div class="note-tom">Ingen noter endnu — upload materiale for at komme i gang.</div>
+      </div>
+    </div>
+
+    <!-- PROGRAMMERING -->
+    <div class="fag-kort fag-prog" id="programmering" data-fag="programmering">
+      <div class="fag-header" onclick="toggleFag(this)">
+        <div class="fag-header-left">
+          <div class="fag-ikon">💻</div>
+          <div>
+            <div class="fag-titel">Programmering & Databaser</div>
+            <div class="fag-meta" id="meta-prog">0 noter</div>
+          </div>
+        </div>
+        <span class="fag-toggle">▾</span>
+      </div>
+      <div class="fag-noter-liste" id="liste-prog">
+        <div class="note-tom">Ingen noter endnu — upload materiale for at komme i gang.</div>
+      </div>
+    </div>
+
+    <!-- ORGANISATION -->
+    <div class="fag-kort fag-org" id="organisation" data-fag="organisation">
+      <div class="fag-header" onclick="toggleFag(this)">
+        <div class="fag-header-left">
+          <div class="fag-ikon">🏢</div>
+          <div>
+            <div class="fag-titel">Organisationslære</div>
+            <div class="fag-meta" id="meta-org">0 noter</div>
+          </div>
+        </div>
+        <span class="fag-toggle">▾</span>
+      </div>
+      <div class="fag-noter-liste" id="liste-org">
+        <div class="note-tom">Ingen noter endnu — upload materiale for at komme i gang.</div>
+      </div>
+    </div>
+
+    <!-- ØKONOMI -->
+    <div class="fag-kort fag-eco" id="oekonomi" data-fag="oekonomi">
+      <div class="fag-header" onclick="toggleFag(this)">
+        <div class="fag-header-left">
+          <div class="fag-ikon">📊</div>
+          <div>
+            <div class="fag-titel">Virksomhedens Økonomiske Styring</div>
+            <div class="fag-meta" id="meta-eco">0 noter</div>
+          </div>
+        </div>
+        <span class="fag-toggle">▾</span>
+      </div>
+      <div class="fag-noter-liste" id="liste-eco">
+        <div class="note-tom">Ingen noter endnu — upload materiale for at komme i gang.</div>
+      </div>
+    </div>
+
+  </main>
+
+  <p class="ingen-resultater" id="ingen-resultater">Ingen noter matcher din søgning.</p>
+
+  <footer>
+    Pensummit &mdash; HA(it), CBS &middot; <span id="year"></span>
+  </footer>
+
+  <script>
+    // ── NOTER DATA ──
+    // Tilføj noter her som objekter: { lektion, titel, dato, fil }
+    // fil = stien relativt til /public/noter/[fag]/
+    const noter = {
+      it: [
+        // { lektion: 'L01', titel: 'Introduktion til projektledelse', dato: '2026-02-03', fil: 'noter/it-projektledelse/it-projektledelse-L01-2026-02-03-introduktion.html' },
+      ],
+      prog: [
+        // { lektion: 'L01', titel: 'HTML & CSS grundlæggende', dato: '2026-02-05', fil: 'noter/programmering/programmering-L01-2026-02-05-html-css.html' },
+      ],
+      org: [
+        // { lektion: 'L01', titel: 'Hvad er en organisation?', dato: '2026-02-04', fil: 'noter/organisation/organisation-L01-2026-02-04-intro.html' },
+      ],
+      eco: [
+        // { lektion: 'L01', titel: 'Regnskabets grundbegreber', dato: '2026-02-06', fil: 'noter/oekonomi/oekonomi-L01-2026-02-06-grundbegreber.html' },
+      ],
+    };
+
+    // ── BYGG LISTER ──
+    const fagMap = {
+      it:   { liste: 'liste-it',   meta: 'meta-it' },
+      prog: { liste: 'liste-prog', meta: 'meta-prog' },
+      org:  { liste: 'liste-org',  meta: 'meta-org' },
+      eco:  { liste: 'liste-eco',  meta: 'meta-eco' },
+    };
+
+    function formatDato(dato) {
+      const [y, m, d] = dato.split('-');
+      return `${d}/${m}/${y}`;
+    }
+
+    function byggListe(fag) {
+      const { liste, meta } = fagMap[fag];
+      const el = document.getElementById(liste);
+      const metaEl = document.getElementById(meta);
+      const items = noter[fag];
+
+      if (!items || items.length === 0) {
+        el.innerHTML = '<div class="note-tom">Ingen noter endnu — upload materiale for at komme i gang.</div>';
+        metaEl.textContent = '0 noter';
+        return;
+      }
+
+      metaEl.textContent = `${items.length} note${items.length !== 1 ? 'r' : ''}`;
+      el.innerHTML = items.map(n => `
+        <a class="note-item" href="/${n.fil}" data-titel="${n.titel.toLowerCase()}">
+          <div class="note-item-left">
+            <span class="note-lektion">${n.lektion}</span>
+            <span class="note-titel">${n.titel}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem">
+            <span class="note-dato">${formatDato(n.dato)}</span>
+            <span class="note-arrow">→</span>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    Object.keys(fagMap).forEach(byggListe);
+
+    // ── TOGGLE FAG ──
+    function toggleFag(header) {
+      const kort = header.closest('.fag-kort');
+      kort.classList.toggle('open');
+    }
+
+    // ── SØGNING ──
+    const searchInput = document.getElementById('search-input');
+    const searchCount = document.getElementById('search-count');
+    const ingenResultater = document.getElementById('ingen-resultater');
+
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+
+      if (!q) {
+        // Nulstil
+        document.querySelectorAll('.note-item').forEach(el => el.style.display = '');
+        document.querySelectorAll('.note-tom').forEach(el => el.style.display = '');
+        document.querySelectorAll('.fag-kort').forEach(el => el.classList.remove('open'));
+        searchCount.textContent = '';
+        ingenResultater.style.display = 'none';
+        return;
+      }
+
+      let hits = 0;
+      document.querySelectorAll('.fag-kort').forEach(kort => {
+        const items = kort.querySelectorAll('.note-item');
+        let fagHits = 0;
+
+        items.forEach(item => {
+          const match = item.dataset.titel.includes(q);
+          item.style.display = match ? '' : 'none';
+          if (match) { fagHits++; hits++; }
+        });
+
+        // Vis/skjul tom-besked og åbn kort ved hits
+        const tom = kort.querySelector('.note-tom');
+        if (tom) tom.style.display = 'none';
+        if (fagHits > 0) {
+          kort.classList.add('open');
+        } else {
+          kort.classList.remove('open');
+        }
+      });
+
+      searchCount.textContent = hits > 0 ? `${hits} resultat${hits !== 1 ? 'er' : ''}` : '';
+      ingenResultater.style.display = hits === 0 ? 'block' : 'none';
+    });
+
+    // ── ÅR I FOOTER ──
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
