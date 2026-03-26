@@ -1,0 +1,39 @@
+[
+    {
+        "id": "projektmodeller",
+        "title": "Projektmodeller",
+        "subject": "it-projektledelse",
+        "tags": [
+            "vandfald",
+            "agil",
+            "scrum"
+        ],
+        "date": "2026-03-26",
+        "path": "/noter/it-projektledelse/projektmodeller.html",
+        "excerpt": "Overblik over klassiske og agile projektmodeller."
+    },
+    {
+        "id": "regnskabsanalyse",
+        "title": "Regnskabsanalyse",
+        "subject": "oekonomi",
+        "tags": [
+            "nøgletal",
+            "rentabilitet"
+        ],
+        "date": "2026-03-25",
+        "path": "/noter/oekonomi/regnskabsanalyse.html",
+        "excerpt": "De vigtigste nøgletal og hvordan de bruges."
+    },
+    {
+        "id": "organisationsteori",
+        "title": "Organisationsteori",
+        "subject": "organisation",
+        "tags": [
+            "mintzberg",
+            "struktur"
+        ],
+        "date": "2026-03-20",
+        "path": "/noter/organisation/organisationsteori.html",
+        "excerpt": "Grundlæggende organisationsformer og ledelsesstruktur."
+    }
+]
