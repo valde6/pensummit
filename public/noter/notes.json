@@ -58,5 +58,38 @@
         "date": "2026-03-16",
         "path": "/noter/programmering/programmering-L17-2026-03-16-videregaaende-sql.html",
         "excerpt": "SELECT, JOIN, UNION, INTERSECT, EXCEPT og subqueries."
+    },
+    {
+        "id": "programmering-L14-arkitektur-design",
+        "title": "OO+UML 2: Arkitektur og Design",
+        "subject": "programmering",
+        "lektion": "L14",
+        "tags": [
+            "Arkitektur",
+            "MVC",
+            "3-tier",
+            "SSD",
+            "DSD",
+            "DCD"
+        ],
+        "date": "2026-02-23",
+        "path": "/noter/programmering/programmering-L14-2026-02-23-arkitektur-design.html",
+        "excerpt": "SSD, systemarkitektur (monolit, 3-tier, MVC) og designklassediagram."
+    },
+    {
+        "id": "programmering-L15-er-model",
+        "title": "Databaser 1: E/R Modeler og Relationel Model",
+        "subject": "programmering",
+        "lektion": "L15",
+        "tags": [
+            "E/R model",
+            "Entitet",
+            "Primærnøgle",
+            "Fremmednøgle",
+            "Crow's Foot"
+        ],
+        "date": "2026-03-02",
+        "path": "/noter/programmering/programmering-L15-2026-03-02-er-model.html",
+        "excerpt": "E/R-modellens komponenter, nøgler og multiplicitet."
     }
 ]
