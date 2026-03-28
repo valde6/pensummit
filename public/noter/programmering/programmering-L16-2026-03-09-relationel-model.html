@@ -63,7 +63,7 @@
     <div class="note-page">
 
         <nav class="note-nav">
-            <a href="#" class="disabled">← Lektion 15</a>
+            <a href="/noter/programmering/programmering-L15-2026-03-02-er-model.html">← Lektion 15</a>
             <a href="/">🏠 Oversigt</a>
             <a href="/noter/programmering/programmering-L17-2026-03-16-videregaaende-sql.html">Lektion 17 →</a>
         </nav>
@@ -94,7 +94,8 @@
             data er redundansfrit og fri for utilsigtede bi-effekter ved indsættelse, opdatering og sletning.</p>
         <p>SQL-syntaksen til datamanipulation dækker <code>CREATE TABLE</code> med constraints,
             <code>INSERT INTO</code>, <code>UPDATE</code> og <code>DELETE</code> — de fire grundlæggende operationer der
-            svarer til CRUD.</p>
+            svarer til CRUD.
+        </p>
 
         <!-- BEGREBER -->
         <h2>🔑 Vigtige begreber</h2>
@@ -210,7 +211,8 @@ graph LR
                 <li><strong>Anomalies:</strong> Beskriv update, insertion og deletion anomaly — og hvorfor normalisering
                     forhindrer dem.</li>
                 <li><strong>CREATE TABLE med constraints:</strong> <code>CONSTRAINT PK_emp PRIMARY KEY (empno)</code> og
-                    <code>CONSTRAINT FK_emp FOREIGN KEY (deptno) REFERENCES dept(deptno)</code>.</li>
+                    <code>CONSTRAINT FK_emp FOREIGN KEY (deptno) REFERENCES dept(deptno)</code>.
+                </li>
                 <li><strong>INSERT/UPDATE/DELETE-syntaks:</strong> Skriv alle tre uden at slå op.</li>
                 <li><strong>NULL:</strong> Betyder "ikke defineret" — ikke 0 eller tom streng.</li>
                 <li><strong>Datatyper:</strong> CHAR(n) fast længde, VARCHAR(n) variabel, INT, DATE, FLOAT.</li>
@@ -272,7 +274,8 @@ graph LR
                     Eks: <code>emp(empno, ename, job, sal)</code></p>
                 <p><strong>Trin 2 — Mange-mange:</strong> Opret en ny brygge-tabel med FK fra begge entiteter som
                     sammensat PK, plus relationens egne attributter. Eks:
-                    <code>project_members(empno, projectno, role)</code></p>
+                    <code>project_members(empno, projectno, role)</code>
+                </p>
                 <p><strong>Trin 3 — 1-mange:</strong> Placer en FK på mange-siden (eller lav en ny tabel hvis relationen
                     har mange egne attributter). Eks: <code>emp(empno, ..., deptno(FK))</code></p>
                 <p><strong>Trin 4 — 1-1:</strong> Begge sider kan være mange-siden. Hvis én side er valgfri, placer FK
@@ -288,7 +291,8 @@ graph LR
                 <p><strong>2NF — ingen partielle afhængigheder:</strong> Relevant ved sammensatte PK'er. Hvis en
                     attribut kun afhænger af <em>en del</em> af PK'en, flyttes den til en separat tabel. Eks:
                     <code>order(ono, odate, partid)</code> + <code>part(partid, pname, price)</code> — pname afhænger
-                    kun af partid, ikke af ono.</p>
+                    kun af partid, ikke af ono.
+                </p>
                 <p><strong>3NF — ingen transitive afhængigheder:</strong> Non-key attributter må kun afhænge af PK. Eks:
                     emp-tabellen med dname og loc — de afhænger af deptno, ikke empno. Løsning: adskil i emp og
                     dept-tabeller.</p>
@@ -436,7 +440,7 @@ teaches  = (idTeacher(FK), idCourse(FK))</pre>
         </ul>
 
         <nav class="note-nav" style="margin-top:3rem">
-            <a href="#" class="disabled">← Lektion 15</a>
+            <a href="/noter/programmering/programmering-L15-2026-03-02-er-model.html">← Lektion 15</a>
             <a href="/">🏠 Oversigt</a>
             <a href="/noter/programmering/programmering-L17-2026-03-16-videregaaende-sql.html">Lektion 17 →</a>
         </nav>
