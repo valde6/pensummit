@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>[Titel på note] – Pensummit</title>
+
+<link rel="stylesheet" href="/css/note.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- NAV -->
+  <div class="nav-bar">
+    <a href="/">← Forside</a>
+    <span>[Fag · Kursus]</span>
+    <a href="#" class="disabled">Næste →</a>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>[Titel på note]</h1>
+
+    <div class="meta">
+      [Dato] · [Underviser / kursus]
+    </div>
+
+    <div class="tags">
+      <span class="tag">tag1</span>
+      <span class="tag">tag2</span>
+      <span class="tag">tag3</span>
+    </div>
+
+    <div class="timestamp">
+      Genereret [dato]
+    </div>
+  </div>
+
+  <!-- OPSUMMERING -->
+  <h2>📋 Opsummering</h2>
+  <p>[Kort forklaring af emnet]</p>
+
+  <!-- BEGREBER -->
+  <h2>📖 Vigtige begreber</h2>
+  <table>
+    <tr>
+      <th>Begreb</th>
+      <th>Definition</th>
+      <th>Eksempel</th>
+    </tr>
+  </table>
+
+  <!-- DIAGRAM -->
+  <h2>🗺️ Overblik</h2>
+
+  <div class="diagram-wrap">
+    <div class="mermaid">
+graph TD
+A["Hovedemne"]
+A --> B["Underemne"]
+    </div>
+  </div>
+
+  <!-- EXAM BOX -->
+  <div class="exam-box">
+    <h2>🎯 Til eksamen</h2>
+    <ul>
+      <li><strong>Vigtig pointe</strong></li>
+    </ul>
+  </div>
+
+  <!-- FORMELSAMLING -->
+  <details>
+    <summary>📐 Formelsamling</summary>
+    <div class="formula-box">
+      <div class="formula">
+        Formel her
+      </div>
+    </div>
+  </details>
+
+  <!-- UDDYBNING -->
+  <h2>📚 Uddybning</h2>
+
+  <details class="uddybning-item">
+    <summary>Emne</summary>
+    <div class="content">
+      <p>Forklaring</p>
+    </div>
+  </details>
+
+  <!-- QUIZ -->
+  <h2>🧠 Quiz</h2>
+  <div id="quiz-container"></div>
+  <div class="score-display" id="score-display"></div>
+  <button class="restart-btn" onclick="initQuiz()">Start forfra</button>
+
+  <!-- EGNE NOTER -->
+  <h2>📝 Mine noter</h2>
+  <textarea placeholder="Skriv dine egne noter"></textarea>
+
+  <!-- KILDER -->
+  <h2>📌 Kilder</h2>
+  <div class="sources">
+    <ul>
+      <li>[Materiale]</li>
+    </ul>
+  </div>
+
+  <!-- NAV BOTTOM -->
+  <div class="nav-bar" style="margin-top:40px">
+    <a href="/">← Forside</a>
+    <a href="#" class="disabled">Næste →</a>
+  </div>
+
+</div>
+
+<script>
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'neutral',
+  themeVariables: { fontSize: '16px' }
+});
+</script>
+
+</body>
+</html>

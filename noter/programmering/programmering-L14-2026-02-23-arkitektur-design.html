@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OO+UML 2: Arkitektur og Design — Pensummit</title>
+    <meta name="description"
+        content="SSD, systemarkitektur (monolit, 3-tier, MVC), designsekvensdiagram og designklassediagram." />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+
+<body data-fag="programmering">
+
+    <header>
+        <a class="logo" href="/">Pensum<span>mit</span></a>
+        <nav>
+            <a href="/#it-projektledelse">IT-Projektledelse</a>
+            <a href="/#programmering">Programmering</a>
+            <a href="/#organisation">Organisation</a>
+            <a href="/#oekonomi">Økonomi</a>
+        </nav>
+    </header>
+
+    <div class="note-page">
+
+        <nav class="note-nav">
+            <a href="#" class="disabled">← Lektion 13</a>
+            <a href="/">🏠 Oversigt</a>
+            <a href="/noter/programmering/programmering-L15-2026-03-02-er-model.html">Lektion 15 →</a>
+        </nav>
+
+        <header class="note-header">
+            <h1>OO+UML 2: Arkitektur og Design</h1>
+            <p class="note-meta">Programmering & Databaser · 23. februar 2026 · Ole Torp Lassen</p>
+            <div class="tags">
+                <span class="tag">Arkitektur</span>
+                <span class="tag">MVC</span>
+                <span class="tag">3-tier</span>
+                <span class="tag">SSD</span>
+                <span class="tag">DSD</span>
+                <span class="tag">DCD</span>
+                <span class="tag">OO Design</span>
+                <span class="tag">Systemoperationer</span>
+            </div>
+            <p class="timestamp">Genereret 28. marts 2026</p>
+        </header>
+
+        <!-- OPSUMMERING -->
+        <h2>📋 Opsummering</h2>
+        <p>Forelæsning 14 bygger videre på analysen fra L13 og bevæger sig over i design og arkitektur. Hvor analyse
+            handler om at beskrive virkeligheden (domænet og problemet), handler design om at beskrive softwareløsningen
+            — hvilke klasser, metoder og strukturer skal systemet have?</p>
+        <p>Systemsekvensdiagrammet (SSD) viser systemoperationerne fra brugerens perspektiv — hvad sker der når aktøren
+            interagerer med systemet som en "black box". Arkitekturvalget (monolit, 3-tier eller MVC) afgør hvem der har
+            ansvar for hvad, og danner grundlag for designsekvensdiagrammet (DSD), der folder systemet ud internt.</p>
+        <p>Designklassediagrammet (DCD) er det endelige resultat: klasser med attributter, metoder og relationer — klar
+            til implementation. Processen er iterativ: én usecase ad gangen forfines fra SSD → arkitektur → DSD → DCD.
+        </p>
+
+        <!-- BEGREBER -->
+        <h2>🔑 Vigtige begreber</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Begreb</th>
+                    <th>Definition</th>
+                    <th>Eksempel / kontekst</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SSD (Systemsekvensdiagram)</strong></td>
+                    <td>Diagram der viser systemoperationer: aktørens inputs og systemets svar — systemet som black box.
+                    </td>
+                    <td>Aktør kalder submitTitleData() → system returnerer bekræftelse</td>
+                </tr>
+                <tr>
+                    <td><strong>DSD (Designsekvensdiagram)</strong></td>
+                    <td>Folder systemet ud internt: viser hvilke klasser der kalder hinanden og med hvilke metoder.</td>
+                    <td>Controller → Model → Repository → Database</td>
+                </tr>
+                <tr>
+                    <td><strong>DCD (Designklassediagram)</strong></td>
+                    <td>Det færdige klassediagram med attributter, metoder og relationer — grundlag for implementation.
+                    </td>
+                    <td>Klasse Kunde med attribut navn:String og metode getOrders()</td>
+                </tr>
+                <tr>
+                    <td><strong>Monolit</strong></td>
+                    <td>Arkitektur hvor alt (UI, logik, data) ligger i ét lag. Simpelt men svært at skalere og
+                        vedligeholde.</td>
+                    <td>Én stor applikation uden lagdeling</td>
+                </tr>
+                <tr>
+                    <td><strong>3-tier</strong></td>
+                    <td>Arkitektur med tre lag: præsentation (view), forretningslogik og datadatalag. Klienten kender
+                        ikke databasen.</td>
+                    <td>Browser → Server → Database</td>
+                </tr>
+                <tr>
+                    <td><strong>MVC</strong></td>
+                    <td>Model-View-Controller: view viser data, controller håndterer input, model indeholder
+                        forretningslogik og data.</td>
+                    <td>Klient: View, Server: Controller + Model, DB: data</td>
+                </tr>
+                <tr>
+                    <td><strong>Systemoperation</strong></td>
+                    <td>En operation som systemet tilbyder aktøren — identificeret via SSD. Bliver til metoder i
+                        controlleren.</td>
+                    <td>submitTitleData(title, date)</td>
+                </tr>
+                <tr>
+                    <td><strong>Repository</strong></td>
+                    <td>Et lag der isolerer datadataadgang fra forretningslogikken. Controlleren kender ikke databasen
+                        direkte.</td>
+                    <td>Controller → Repositorium → Database</td>
+                </tr>
+                <tr>
+                    <td><strong>Creator/Knowledge Expert</strong></td>
+                    <td>GRASP-principper: objektet der har data om noget, bør have ansvar for det. Den der skaber
+                        objekter bør kende dem.</td>
+                    <td>Ordre-klassen opretter Ordrelinjer (Creator)</td>
+                </tr>
+                <tr>
+                    <td><strong>Iterativ forfining</strong></td>
+                    <td>Én usecase ad gangen: analyse → SSD → arkitektur → DSD → DCD → implementation → næste usecase.
+                    </td>
+                    <td>"One slice at a time"</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- DIAGRAMMER -->
+        <h2>🗺️ Overblik</h2>
+
+        <div class="diagram-wrap">
+            <pre class="mermaid">
+graph LR
+  UC["Usecase analyse<br/>+ domænemodel"] --> SSD["SSD<br/>Systemoperationer"]
+  SSD --> ARK["Arkitekturvalg<br/>Monolit / 3-tier / MVC"]
+  ARK --> DSD["DSD<br/>Intern designsekvens"]
+  DSD --> DCD["DCD<br/>Designklassediagram"]
+  DCD --> IMP["Implementation"]
+  IMP -->|"næste usecase"| SSD
+
+  style UC fill:#c8502a,color:#fff,stroke:#a03d1f
+  style ARK fill:#c8502a,color:#fff,stroke:#a03d1f
+  style SSD fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style DSD fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style DCD fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style IMP fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+      </pre>
+        </div>
+
+        <div class="diagram-wrap">
+            <pre class="mermaid">
+graph TD
+  subgraph MVC["MVC Arkitektur"]
+    V["View<br/>(Klient / Browser)"]
+    C["Controller<br/>(Server)"]
+    M["Model<br/>(Server)"]
+    DB["Database"]
+  end
+  V -->|"HTTP request"| C
+  C --> M
+  M --> DB
+  DB --> M
+  M --> C
+  C -->|"HTTP response"| V
+
+  style V fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style C fill:#c8502a,color:#fff,stroke:#a03d1f
+  style M fill:#d4633a,color:#fff,stroke:#a03d1f
+  style DB fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+      </pre>
+        </div>
+
+        <!-- EKSAMEN -->
+        <div class="exam-box">
+            <h2>🎯 Til eksamen</h2>
+            <ul>
+                <li><strong>Analyse vs. design:</strong> Analyse beskriver virkeligheden (hvad systemet skal), design
+                    beskriver løsningen (hvordan systemet bygges).</li>
+                <li><strong>SSD → DSD → DCD:</strong> Kend flowet og hvad hvert diagram viser. SSD = black box, DSD =
+                    intern interaktion, DCD = færdigt klassediagram.</li>
+                <li><strong>Arkitekturerne:</strong> Monolit (alt ét sted), 3-tier (præsentation/logik/data), MVC
+                    (View/Controller/Model). Kend fordele og forskelle.</li>
+                <li><strong>MVC i eksamensopgaven:</strong> Browser = View, Express = Controller, Node.js-klasser =
+                    Model, SQL = Database.</li>
+                <li><strong>Repository-mønstret:</strong> Isolerer datadataadgang. Controller → Repository → Database —
+                    Controller kender ikke SQL direkte.</li>
+                <li><strong>GRASP-principper:</strong> Creator (hvem opretter objekter?) og Knowledge Expert (hvem har
+                    ansvaret?) er de vigtigste.</li>
+                <li><strong>Iterativ udvikling:</strong> Én usecase ad gangen forfines komplet — "one slice at a time".
+                </li>
+            </ul>
+        </div>
+
+        <!-- UDDYBNING -->
+        <h2>📖 Uddybning</h2>
+
+        <details class="uddybning-item">
+            <summary>Fra SSD til DSD — fold systemet ud</summary>
+            <div class="content">
+                <p>SSD viser systemet som en sort boks: aktøren kalder en systemoperation (fx
+                    <code>submitTitleData(title, date)</code>), og systemet svarer. Det siger ikke noget om hvad der
+                    sker internt.</p>
+                <p>DSD folder den interne struktur ud: hvilke klasser involveres, i hvilken rækkefølge kaldes metoder,
+                    og hvad returneres? Arkitekturvalget styrer dette — i MVC vil Controller modtage kaldet, kalde
+                    Model, som igen kalder Repository, der tilgår databasen.</p>
+                <p>Huskeliste for DSD: livslinjer = klasser, beskeder = metoder på modtagerklassen,
+                    parametre/returværdier = metodesignaturer.</p>
+            </div>
+        </details>
+
+        <details class="uddybning-item">
+            <summary>De tre arkitekturer sammenlignet</summary>
+            <div class="content">
+                <p><strong>Monolit:</strong> Alt i ét. Simpelt at starte med, men svært at vedligeholde og skalere.
+                    Ingen klar adskillelse af ansvar.</p>
+                <p><strong>3-tier:</strong> Tre fysisk adskilte lag: præsentation (browser/UI), forretningslogik
+                    (server) og data (database). Klienten kender ikke databasen. Giver bedre adskillelse og sikkerhed.
+                </p>
+                <p><strong>MVC:</strong> En konkretisering af 3-tier. View håndterer præsentation, Controller håndterer
+                    input og styrer flowet, Model indeholder forretningslogikken og datastrukturer. I en webapplikation:
+                    klienten er View, serveren deles i Controller og Model, databasen er datalagret.</p>
+                <p>I eksamensopgaven bruger I MVC: HTML/CSS = View, Express routes = Controller, Node.js-klasser =
+                    Model, SQL-database = persistence.</p>
+            </div>
+        </details>
+
+        <details class="uddybning-item">
+            <summary>GRASP-principper — ansvarsfordeling</summary>
+            <div class="content">
+                <p>GRASP (General Responsibility Assignment Software Patterns) er principper for at afgøre hvilken
+                    klasse der skal have et givet ansvar.</p>
+                <p><strong>Creator:</strong> Klasse A bør oprette objekter af klasse B, hvis A indeholder B, registrerer
+                    B, eller tæt bruger B. Fx: en Ordre bør oprette Ordrelinjer.</p>
+                <p><strong>Knowledge Expert:</strong> Giv ansvaret til den klasse der har den nødvendige information.
+                    Fx: Ordrelinjen kender sin enhedspris, så den bør beregne sin delpris.</p>
+                <p>Man kan starte simpelt — "Controller skaber alt" — og gradvist forfine ved at flytte ansvar ud til de
+                    klasser der naturligt ejer det.</p>
+            </div>
+        </details>
+
+        <details class="uddybning-item">
+            <summary>Repository-mønstret og persistenslaget</summary>
+            <div class="content">
+                <p>Et repositorium (repository) er et objekt der fungerer som en "samling" af domæneobjekter. Det
+                    isolerer al databaselogik fra resten af systemet.</p>
+                <p>Fordele: Controller og Model behøver ikke kende SQL. Hvis databasen skiftes ud, ændres kun
+                    repositoriet. Det gør koden nemmere at teste og vedligeholde.</p>
+                <p>I eksamensopgaven: Express-routes (Controller) kalder en Model-klasse, der kalder et Repository, der
+                    kører SQL mod databasen og returnerer objekter.</p>
+            </div>
+        </details>
+
+        <!-- QUIZ -->
+        <h2>🧠 Quiz</h2>
+        <p class="score-display" id="score-display">Score: 0 / 10</p>
+
+        <div class="quiz-question" id="q1">
+            <p>1. Hvad er forskellen på analyse og design?</p>
+            <button class="quiz-btn" onclick="answer(this,'q1',false)">Analyse bruger UML, design bruger kode</button>
+            <button class="quiz-btn" onclick="answer(this,'q1',true)">Analyse beskriver virkeligheden, design beskriver
+                softwareløsningen</button>
+            <button class="quiz-btn" onclick="answer(this,'q1',false)">Design kommer før analyse i processen</button>
+            <button class="quiz-btn" onclick="answer(this,'q1',false)">Der er ingen praktisk forskel</button>
+        </div>
+
+        <div class="quiz-question" id="q2">
+            <p>2. Hvad viser et SSD (Systemsekvensdiagram)?</p>
+            <button class="quiz-btn" onclick="answer(this,'q2',false)">Systemets interne klassehierarki</button>
+            <button class="quiz-btn" onclick="answer(this,'q2',false)">Databasens tabeller og relationer</button>
+            <button class="quiz-btn" onclick="answer(this,'q2',true)">Systemoperationer fra aktørens perspektiv —
+                systemet som black box</button>
+            <button class="quiz-btn" onclick="answer(this,'q2',false)">Alle metoder og attributter i systemet</button>
+        </div>
+
+        <div class="quiz-question" id="q3">
+            <p>3. Hvad er MVC?</p>
+            <button class="quiz-btn" onclick="answer(this,'q3',false)">En programmeringssprog til
+                webapplikationer</button>
+            <button class="quiz-btn" onclick="answer(this,'q3',true)">En arkitektur med Model, View og Controller som
+                adskilte ansvarsområder</button>
+            <button class="quiz-btn" onclick="answer(this,'q3',false)">Et databasedesignmønster</button>
+            <button class="quiz-btn" onclick="answer(this,'q3',false)">En metode til at teste software</button>
+        </div>
+
+        <div class="quiz-question" id="q4">
+            <p>4. I eksamensopgavens MVC-arkitektur — hvad svarer Express-routes til?</p>
+            <button class="quiz-btn" onclick="answer(this,'q4',false)">Model</button>
+            <button class="quiz-btn" onclick="answer(this,'q4',false)">View</button>
+            <button class="quiz-btn" onclick="answer(this,'q4',true)">Controller</button>
+            <button class="quiz-btn" onclick="answer(this,'q4',false)">Repository</button>
+        </div>
+
+        <div class="quiz-question" id="q5">
+            <p>5. Hvad er formålet med et repository?</p>
+            <button class="quiz-btn" onclick="answer(this,'q5',false)">At gemme HTML-filer på serveren</button>
+            <button class="quiz-btn" onclick="answer(this,'q5',true)">At isolere al databaselogik fra resten af
+                systemet</button>
+            <button class="quiz-btn" onclick="answer(this,'q5',false)">At styre brugerens navigation i
+                applikationen</button>
+            <button class="quiz-btn" onclick="answer(this,'q5',false)">At validere brugerinput</button>
+        </div>
+
+        <div class="quiz-question" id="q6">
+            <p>6. Hvad kendetegner en monolitisk arkitektur?</p>
+            <button class="quiz-btn" onclick="answer(this,'q6',false)">Systemet er opdelt i mange små services</button>
+            <button class="quiz-btn" onclick="answer(this,'q6',true)">Alt (UI, logik, data) ligger samlet uden klar
+                lagdeling</button>
+            <button class="quiz-btn" onclick="answer(this,'q6',false)">Systemet bruger MVC-mønstret</button>
+            <button class="quiz-btn" onclick="answer(this,'q6',false)">Databasen er adskilt fra resten</button>
+        </div>
+
+        <div class="quiz-question" id="q7">
+            <p>7. Hvad er GRASP-princippet "Knowledge Expert"?</p>
+            <button class="quiz-btn" onclick="answer(this,'q7',false)">Den erfarne udvikler bestemmer
+                arkitekturen</button>
+            <button class="quiz-btn" onclick="answer(this,'q7',false)">Controllers skal kende alle klasser i
+                systemet</button>
+            <button class="quiz-btn" onclick="answer(this,'q7',true)">Giv ansvar til den klasse der har den nødvendige
+                information</button>
+            <button class="quiz-btn" onclick="answer(this,'q7',false)">En ekspertklasse håndterer al
+                forretningslogik</button>
+        </div>
+
+        <div class="quiz-question" id="q8">
+            <p>8. Hvad er forskellen på SSD og DSD?</p>
+            <button class="quiz-btn" onclick="answer(this,'q8',false)">SSD er til design, DSD er til analyse</button>
+            <button class="quiz-btn" onclick="answer(this,'q8',true)">SSD viser systemet som black box, DSD folder den
+                interne interaktion ud</button>
+            <button class="quiz-btn" onclick="answer(this,'q8',false)">De er det samme diagram med forskelligt
+                navn</button>
+            <button class="quiz-btn" onclick="answer(this,'q8',false)">DSD bruges kun til databaser</button>
+        </div>
+
+        <div class="quiz-question" id="q9">
+            <p>9. Hvad indeholder et DCD (Designklassediagram)?</p>
+            <button class="quiz-btn" onclick="answer(this,'q9',false)">Use cases og aktører</button>
+            <button class="quiz-btn" onclick="answer(this,'q9',false)">Systemoperationer og sekvenser</button>
+            <button class="quiz-btn" onclick="answer(this,'q9',true)">Klasser med attributter, metoder og relationer —
+                klar til implementation</button>
+            <button class="quiz-btn" onclick="answer(this,'q9',false)">Databasetabeller og SQL-queries</button>
+        </div>
+
+        <div class="quiz-question" id="q10">
+            <p>10. Hvad betyder "one slice at a time" i iterativ udvikling?</p>
+            <button class="quiz-btn" onclick="answer(this,'q10',false)">Man implementerer én klasse ad gangen</button>
+            <button class="quiz-btn" onclick="answer(this,'q10',true)">Én usecase forfines komplet
+                (SSD→DSD→DCD→implementation) før man går videre</button>
+            <button class="quiz-btn" onclick="answer(this,'q10',false)">Man skriver én metode ad gangen</button>
+            <button class="quiz-btn" onclick="answer(this,'q10',false)">Databasen oprettes lag for lag</button>
+        </div>
+
+        <button class="restart-btn" onclick="restartQuiz()">↺ Start forfra</button>
+
+        <h2>📝 Mine noter</h2>
+        <textarea placeholder="Skriv dine egne noter her…"></textarea>
+
+        <h2>📚 Kilder og pensum</h2>
+        <ul class="sources">
+            <li>Forelæsning 14: OO+UML 2, Arkitektur og Design — Ole Torp Lassen, CBS HA(it), 2026</li>
+        </ul>
+
+        <nav class="note-nav" style="margin-top:3rem">
+            <a href="#" class="disabled">← Lektion 13</a>
+            <a href="/">🏠 Oversigt</a>
+            <a href="/noter/programmering/programmering-L15-2026-03-02-er-model.html">Lektion 15 →</a>
+        </nav>
+
+    </div>
+
+    <footer>Pensummit &mdash; HA(it), CBS · <span id="year"></span></footer>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true, theme: 'default',
+            themeVariables: {
+                fontSize: '15px', fontFamily: 'DM Sans, sans-serif',
+                primaryColor: '#f0e8e3', primaryBorderColor: '#c8502a',
+                primaryTextColor: '#1a1814', lineColor: '#c8502a',
+                background: '#ffffff', mainBkg: '#ffffff'
+            }
+        });
+        let score = 0;
+        const total = document.querySelectorAll('.quiz-question').length;
+        function answer(btn, qId, isCorrect) {
+            const q = document.getElementById(qId);
+            if (q.dataset.done) return;
+            q.dataset.done = '1';
+            q.querySelectorAll('.quiz-btn').forEach(b => {
+                b.disabled = true;
+                if (b.onclick.toString().includes('true')) b.classList.add('correct');
+            });
+            if (!isCorrect) btn.classList.add('wrong');
+            else score++;
+            document.getElementById('score-display').textContent = `Score: ${score} / ${total}`;
+        }
+        function restartQuiz() {
+            score = 0;
+            document.querySelectorAll('.quiz-question').forEach(q => {
+                delete q.dataset.done;
+                q.querySelectorAll('.quiz-btn').forEach(b => { b.disabled = false; b.classList.remove('correct', 'wrong'); });
+            });
+            document.getElementById('score-display').textContent = `Score: 0 / ${total}`;
+        }
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+
+</html>

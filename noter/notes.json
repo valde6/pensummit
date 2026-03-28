@@ -1,0 +1,95 @@
+[
+    {
+        "id": "it-projektledelse-L01-intro",
+        "title": "Introduktion til IT-projektledelse",
+        "subject": "it-projektledelse",
+        "lektion": "L01",
+        "tags": [
+            "projektledelse",
+            "intro"
+        ],
+        "date": "2026-02-03",
+        "path": "/noter/it-projektledelse/it-projektledelse-L01-2026-02-03-intro.html",
+        "excerpt": "Introduktion til faget IT-projektledelse."
+    },
+    {
+        "id": "programmering-L18-webserver-api",
+        "title": "Webserver og API'er",
+        "subject": "programmering",
+        "lektion": "L18",
+        "tags": [
+            "HTTP",
+            "REST API",
+            "Express.js",
+            "Node.js",
+            "CRUD"
+        ],
+        "date": "2026-03-23",
+        "path": "/noter/programmering/programmering-L18-2026-03-23-webserver-api.html",
+        "excerpt": "HTTP, Express.js og CRUD-operationer — backend-laget til eksamensopgaven."
+    },
+    {
+        "id": "programmering-L16-relationel-model",
+        "title": "Relationel Model og Datamanipulation",
+        "subject": "programmering",
+        "lektion": "L16",
+        "tags": [
+            "Relationel model",
+            "ER til RM",
+            "Normalisering",
+            "SQL"
+        ],
+        "date": "2026-03-09",
+        "path": "/noter/programmering/programmering-L16-2026-03-09-relationel-model.html",
+        "excerpt": "ER til relationel model, normalisering og SQL datamanipulation."
+    },
+    {
+        "id": "programmering-L17-videregaaende-sql",
+        "title": "Videregående SQL",
+        "subject": "programmering",
+        "lektion": "L17",
+        "tags": [
+            "SQL",
+            "JOIN",
+            "UNION",
+            "Subquery",
+            "Aggregering"
+        ],
+        "date": "2026-03-16",
+        "path": "/noter/programmering/programmering-L17-2026-03-16-videregaaende-sql.html",
+        "excerpt": "SELECT, JOIN, UNION, INTERSECT, EXCEPT og subqueries."
+    },
+    {
+        "id": "programmering-L14-arkitektur-design",
+        "title": "OO+UML 2: Arkitektur og Design",
+        "subject": "programmering",
+        "lektion": "L14",
+        "tags": [
+            "Arkitektur",
+            "MVC",
+            "3-tier",
+            "SSD",
+            "DSD",
+            "DCD"
+        ],
+        "date": "2026-02-23",
+        "path": "/noter/programmering/programmering-L14-2026-02-23-arkitektur-design.html",
+        "excerpt": "SSD, systemarkitektur (monolit, 3-tier, MVC) og designklassediagram."
+    },
+    {
+        "id": "programmering-L15-er-model",
+        "title": "Databaser 1: E/R Modeler og Relationel Model",
+        "subject": "programmering",
+        "lektion": "L15",
+        "tags": [
+            "E/R model",
+            "Entitet",
+            "Primærnøgle",
+            "Fremmednøgle",
+            "Crow's Foot"
+        ],
+        "date": "2026-03-02",
+        "path": "/noter/programmering/programmering-L15-2026-03-02-er-model.html",
+        "excerpt": "E/R-modellens komponenter, nøgler og multiplicitet."
+    }
+]

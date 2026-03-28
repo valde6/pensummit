@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Relationel Model og Datamanipulation — Pensummit</title>
+    <meta name="description"
+        content="ER til relationel model, normalisering og SQL datamanipulation — INSERT, UPDATE, DELETE." />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 16px 18px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.87rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 0.88rem;
+        }
+
+        .kw {
+            color: #66d9ef;
+        }
+
+        .str {
+            color: #a6e22e;
+        }
+
+        .cm {
+            color: #75715e;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body data-fag="programmering">
+
+    <header>
+        <a class="logo" href="/">Pensum<span>mit</span></a>
+        <nav>
+            <a href="/#it-projektledelse">IT-Projektledelse</a>
+            <a href="/#programmering">Programmering</a>
+            <a href="/#organisation">Organisation</a>
+            <a href="/#oekonomi">Økonomi</a>
+        </nav>
+    </header>
+
+    <div class="note-page">
+
+        <nav class="note-nav">
+            <a href="/noter/programmering/programmering-L15-2026-03-02-er-model.html">← Lektion 15</a>
+            <a href="/">🏠 Oversigt</a>
+            <a href="/noter/programmering/programmering-L17-2026-03-16-videregaaende-sql.html">Lektion 17 →</a>
+        </nav>
+
+        <header class="note-header">
+            <h1>Relationel Model og Datamanipulation</h1>
+            <p class="note-meta">Programmering & Databaser · 9. marts 2026 · Ole Torp Lassen</p>
+            <div class="tags">
+                <span class="tag">Relationel model</span>
+                <span class="tag">ER til RM</span>
+                <span class="tag">Normalisering</span>
+                <span class="tag">1NF 2NF 3NF</span>
+                <span class="tag">SQL</span>
+                <span class="tag">CREATE TABLE</span>
+                <span class="tag">INSERT</span>
+                <span class="tag">UPDATE</span>
+            </div>
+            <p class="timestamp">Genereret 28. marts 2026</p>
+        </header>
+
+        <!-- OPSUMMERING -->
+        <h2>📋 Opsummering</h2>
+        <p>Forelæsning 16 handler om at gå fra den konceptuelle ER-model til den logiske relationelle model og videre
+            til en fysisk SQL-database. En relationel model er en samling af "flade" tabeller med navngivne kolonner og
+            rækker, hvor alt data er atomisk og nøgler identificerer enhver række entydigt.</p>
+        <p>Konverteringen fra ER til RM følger faste regler: entiteter bliver tabeller, mange-til-mange relationer
+            kræver en ny brygge-tabel, mens 1-til-mange løses med en fremmednøgle. Normalisering (1NF→2NF→3NF) sikrer at
+            data er redundansfrit og fri for utilsigtede bi-effekter ved indsættelse, opdatering og sletning.</p>
+        <p>SQL-syntaksen til datamanipulation dækker <code>CREATE TABLE</code> med constraints,
+            <code>INSERT INTO</code>, <code>UPDATE</code> og <code>DELETE</code> — de fire grundlæggende operationer der
+            svarer til CRUD.
+        </p>
+
+        <!-- BEGREBER -->
+        <h2>🔑 Vigtige begreber</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Begreb</th>
+                    <th>Definition</th>
+                    <th>Eksempel / kontekst</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Relationel model</strong></td>
+                    <td>Logisk datamodel bestående af flade tabeller med navngivne kolonner og unikke rækker.</td>
+                    <td><code>dept(deptno, dname, loc)</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Primærnøgle (PK)</strong></td>
+                    <td>Kolonne(r) der entydigt identificerer hver række i en tabel.</td>
+                    <td><code>empno</code> i emp-tabellen</td>
+                </tr>
+                <tr>
+                    <td><strong>Fremmednøgle (FK)</strong></td>
+                    <td>Kolonne der peger på primærnøglen i en anden tabel — skaber relation mellem tabeller.</td>
+                    <td><code>deptno(FK)</code> i emp peger på dept</td>
+                </tr>
+                <tr>
+                    <td><strong>Brygge-entitet</strong></td>
+                    <td>En ny tabel der opløser en mange-til-mange relation. Indeholder FK fra begge sider + evt. egne
+                        attributter.</td>
+                    <td><code>project_members(empno, projectno, role)</code></td>
+                </tr>
+                <tr>
+                    <td><strong>1NF</strong></td>
+                    <td>Første normalform: alle kolonner indeholder atomiske (udelelige) værdier — ingen lister i
+                        celler.</td>
+                    <td>En celle må ikke indeholde "Ole, Peter"</td>
+                </tr>
+                <tr>
+                    <td><strong>2NF</strong></td>
+                    <td>Anden normalform: på 1NF + alle non-key attributter er fuldt afhængige af hele primærnøglen
+                        (ingen partielle afhængigheder).</td>
+                    <td>Hvis PK er (ono+partid), må pname ikke kun afhænge af partid</td>
+                </tr>
+                <tr>
+                    <td><strong>3NF</strong></td>
+                    <td>Tredje normalform: på 2NF + ingen transitive afhængigheder — non-key attributter afhænger kun af
+                        PK.</td>
+                    <td>dname og loc afhænger af deptno, ikke empno → separat tabel</td>
+                </tr>
+                <tr>
+                    <td><strong>Transitivafhængighed</strong></td>
+                    <td>A → B → C: C afhænger indirekte af PK via en anden non-key attribut. Brydes ved at splitte
+                        tabellen.</td>
+                    <td>empno → deptno → dname (bryd ud i dept-tabel)</td>
+                </tr>
+                <tr>
+                    <td><strong>Anomaly</strong></td>
+                    <td>Utilsigtet bieffekt i ikke-normaliserede tabeller: update, insertion eller deletion anomaly.
+                    </td>
+                    <td>Sletning af Dr. Giddens fjerner kursusinformation</td>
+                </tr>
+                <tr>
+                    <td><strong>VARCHAR / INT / DATE</strong></td>
+                    <td>SQL-datatyper: tekst med variabel længde, heltal og dato.</td>
+                    <td><code>ENAME VARCHAR(30)</code>, <code>SAL INT</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- DIAGRAMMER -->
+        <h2>🗺️ Overblik</h2>
+
+        <div class="diagram-wrap">
+            <pre class="mermaid">
+graph TD
+  A["ER-model<br/>(konceptuel)"] --> B["Relationel model<br/>(logisk)"]
+  B --> C["SQL tabeller<br/>(fysisk)"]
+  B --> D["Normalisering<br/>1NF → 2NF → 3NF"]
+
+  style A fill:#c8502a,color:#fff,stroke:#a03d1f
+  style B fill:#d4633a,color:#fff,stroke:#a03d1f
+  style C fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style D fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+      </pre>
+        </div>
+
+        <div class="diagram-wrap">
+            <pre class="mermaid">
+graph LR
+  MM["Mange-mange<br/>A ↔ B"] --> BT["Ny brygge-tabel<br/>med FK fra begge"]
+  OM["1-mange<br/>A → B*"] --> FK["FK på mange-siden<br/>eller ny tabel"]
+  OO["1-1<br/>A — B"] --> EIT["FK hos den valgfri<br/>side"]
+
+  style MM fill:#c8502a,color:#fff,stroke:#a03d1f
+  style OM fill:#d4633a,color:#fff,stroke:#a03d1f
+  style OO fill:#e07850,color:#fff,stroke:#a03d1f
+  style BT fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style FK fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style EIT fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+      </pre>
+        </div>
+
+        <!-- EKSAMEN -->
+        <div class="exam-box">
+            <h2>🎯 Til eksamen</h2>
+            <ul>
+                <li><strong>ER til RM-reglerne:</strong> Entitet → tabel, mange-mange → ny tabel med sammensat PK,
+                    1-mange → FK på mange-siden.</li>
+                <li><strong>Normalformer:</strong> 1NF = atomiske værdier, 2NF = ingen partielle afhængigheder, 3NF =
+                    ingen transitive afhængigheder. Kend forskellen og giv eksempler.</li>
+                <li><strong>Anomalies:</strong> Beskriv update, insertion og deletion anomaly — og hvorfor normalisering
+                    forhindrer dem.</li>
+                <li><strong>CREATE TABLE med constraints:</strong> <code>CONSTRAINT PK_emp PRIMARY KEY (empno)</code> og
+                    <code>CONSTRAINT FK_emp FOREIGN KEY (deptno) REFERENCES dept(deptno)</code>.
+                </li>
+                <li><strong>INSERT/UPDATE/DELETE-syntaks:</strong> Skriv alle tre uden at slå op.</li>
+                <li><strong>NULL:</strong> Betyder "ikke defineret" — ikke 0 eller tom streng.</li>
+                <li><strong>Datatyper:</strong> CHAR(n) fast længde, VARCHAR(n) variabel, INT, DATE, FLOAT.</li>
+            </ul>
+        </div>
+
+        <!-- KODE -->
+        <details>
+            <summary>📐 SQL-syntaks reference</summary>
+            <div class="formula-box">
+                <p><strong>CREATE TABLE med constraints</strong></p>
+                <pre><span class="kw">CREATE TABLE</span> ILearn.EMP (
+  EMPNO   <span class="kw">INT</span>         <span class="kw">NOT NULL</span>,
+  ENAME   <span class="kw">VARCHAR</span>(30) <span class="kw">NOT NULL</span>,
+  JOB     <span class="kw">VARCHAR</span>(10),
+  MGR     <span class="kw">INT</span>,
+  HIREDATE <span class="kw">DATE</span>,
+  SAL     <span class="kw">INT</span>,
+  DEPTNO  <span class="kw">INT</span>,
+  <span class="kw">CONSTRAINT</span> PK_emp <span class="kw">PRIMARY KEY</span> (EMPNO),
+  <span class="kw">CONSTRAINT</span> FK_emp <span class="kw">FOREIGN KEY</span> (DEPTNO)
+    <span class="kw">REFERENCES</span> ILearn.DEPT(DEPTNO)
+);</pre>
+
+                <p style="margin-top:14px"><strong>INSERT</strong></p>
+                <pre><span class="kw">INSERT INTO</span> EMP (EMPNO, ENAME, JOB, SAL, DEPTNO)
+<span class="kw">VALUES</span> (7369, <span class="str">'SMITH'</span>, <span class="str">'CLERK'</span>, 800, 20);
+
+<span class="cm">-- Kopi fra anden tabel</span>
+<span class="kw">INSERT INTO</span> OLDEMP (ENO, HDATE)
+<span class="kw">SELECT</span> EMPNO, HIREDATE <span class="kw">FROM</span> EMP
+<span class="kw">WHERE</span> HIREDATE &lt; <span class="str">'1999-12-31'</span>;</pre>
+
+                <p style="margin-top:14px"><strong>UPDATE</strong></p>
+                <pre><span class="kw">UPDATE</span> EMP
+<span class="kw">SET</span> JOB = <span class="str">'MANAGER'</span>, SAL = SAL + 1000
+<span class="kw">WHERE</span> ENAME = <span class="str">'JONES'</span>;
+
+<span class="kw">UPDATE</span> EMP
+<span class="kw">SET</span> SAL = SAL * 1.15
+<span class="kw">WHERE</span> DEPTNO <span class="kw">IN</span> (10, 30);</pre>
+
+                <p style="margin-top:14px"><strong>DELETE</strong></p>
+                <pre><span class="kw">DELETE FROM</span> PROJECT
+<span class="kw">WHERE</span> BUDGET &lt; 10000;
+
+<span class="cm">-- Slet hele tabellen</span>
+<span class="kw">DROP TABLE</span> EMP;</pre>
+            </div>
+        </details>
+
+        <!-- UDDYBNING -->
+        <h2>📖 Uddybning</h2>
+
+        <details class="uddybning-item">
+            <summary>Fra ER til relationel model — de fire trin</summary>
+            <div class="content">
+                <p><strong>Trin 1 — Entiteter:</strong> Hver entitet bliver direkte til en tabel med samme attributter.
+                    Eks: <code>emp(empno, ename, job, sal)</code></p>
+                <p><strong>Trin 2 — Mange-mange:</strong> Opret en ny brygge-tabel med FK fra begge entiteter som
+                    sammensat PK, plus relationens egne attributter. Eks:
+                    <code>project_members(empno, projectno, role)</code>
+                </p>
+                <p><strong>Trin 3 — 1-mange:</strong> Placer en FK på mange-siden (eller lav en ny tabel hvis relationen
+                    har mange egne attributter). Eks: <code>emp(empno, ..., deptno(FK))</code></p>
+                <p><strong>Trin 4 — 1-1:</strong> Begge sider kan være mange-siden. Hvis én side er valgfri, placer FK
+                    hos den valgfri side. Eks: <code>Car(licenseNo, ..., SSN)</code></p>
+            </div>
+        </details>
+
+        <details class="uddybning-item">
+            <summary>Normalformer med eksempler</summary>
+            <div class="content">
+                <p><strong>1NF — atomiske værdier:</strong> Hver celle må kun indeholde én værdi. Ingen lister, ingen
+                    gentagne grupper.</p>
+                <p><strong>2NF — ingen partielle afhængigheder:</strong> Relevant ved sammensatte PK'er. Hvis en
+                    attribut kun afhænger af <em>en del</em> af PK'en, flyttes den til en separat tabel. Eks:
+                    <code>order(ono, odate, partid)</code> + <code>part(partid, pname, price)</code> — pname afhænger
+                    kun af partid, ikke af ono.
+                </p>
+                <p><strong>3NF — ingen transitive afhængigheder:</strong> Non-key attributter må kun afhænge af PK. Eks:
+                    emp-tabellen med dname og loc — de afhænger af deptno, ikke empno. Løsning: adskil i emp og
+                    dept-tabeller.</p>
+            </div>
+        </details>
+
+        <details class="uddybning-item">
+            <summary>Anomalies — hvorfor normalisering er vigtigt</summary>
+            <div class="content">
+                <p><strong>Update anomaly:</strong> Hvis samme data gemmes på flere rækker, kan en opdatering give
+                    inkonsistente data. Eks: medarbejder 519 har to forskellige adresser i samme tabel.</p>
+                <p><strong>Insertion anomaly:</strong> Man kan ikke indsætte data uden at have alle påkrævede felter.
+                    Eks: Dr. Newsome kan ikke registreres som underviser, før han har fået tilknyttet et kursus.</p>
+                <p><strong>Deletion anomaly:</strong> Sletning af en række fjerner utilsigtet anden information. Eks:
+                    Sletter man Dr. Giddens' kursusoplysning, mister man al info om ham.</p>
+            </div>
+        </details>
+
+        <details class="uddybning-item">
+            <summary>ILearn-databasen — skemaet</summary>
+            <div class="content">
+                <p>Det fulde skema I skal oprette til øvelserne:</p>
+                <pre>person   = (idPerson, name, address, email, phone)
+student  = (idStudent, idPerson(FK), enrolled, grade, graduated, gpa)
+parent   = (idParent, idPerson(FK), emergencyPhone, skype)
+teacher  = (idTeacher, idPerson(FK), office, skype)
+lecture  = (idLecture, start, stop, attendance)
+course   = (idCourse, idLecture(FK), name, description)
+takes    = (idStudent(FK), idCourse(FK), exam, score)
+prereq   = (idCourse(FK), idPrereq(FK))
+parents  = (idParent(FK), idStudent(FK))
+teaches  = (idTeacher(FK), idCourse(FK))</pre>
+            </div>
+        </details>
+
+        <!-- QUIZ -->
+        <h2>🧠 Quiz</h2>
+        <p class="score-display" id="score-display">Score: 0 / 10</p>
+
+        <div class="quiz-question" id="q1">
+            <p>1. Hvad sker der med en mange-til-mange relation ved konvertering til relationel model?</p>
+            <button class="quiz-btn" onclick="answer(this,'q1',false)">Den bliver til en fremmednøgle på én af
+                siderne</button>
+            <button class="quiz-btn" onclick="answer(this,'q1',true)">Den bliver til en ny brygge-tabel med FK fra begge
+                sider</button>
+            <button class="quiz-btn" onclick="answer(this,'q1',false)">Den fjernes helt fra modellen</button>
+            <button class="quiz-btn" onclick="answer(this,'q1',false)">Den konverteres til to 1-til-1
+                relationer</button>
+        </div>
+
+        <div class="quiz-question" id="q2">
+            <p>2. Hvad er kravet til første normalform (1NF)?</p>
+            <button class="quiz-btn" onclick="answer(this,'q2',false)">Alle non-key attributter afhænger af
+                primærnøglen</button>
+            <button class="quiz-btn" onclick="answer(this,'q2',false)">Ingen transitive afhængigheder</button>
+            <button class="quiz-btn" onclick="answer(this,'q2',true)">Alle kolonner indeholder atomiske (udelelige)
+                værdier</button>
+            <button class="quiz-btn" onclick="answer(this,'q2',false)">Tabellen har en sammensat primærnøgle</button>
+        </div>
+
+        <div class="quiz-question" id="q3">
+            <p>3. Tabellen emp indeholder dname og loc som afhænger af deptno, ikke empno. Hvilken normalform er brudt?
+            </p>
+            <button class="quiz-btn" onclick="answer(this,'q3',false)">1NF</button>
+            <button class="quiz-btn" onclick="answer(this,'q3',false)">2NF</button>
+            <button class="quiz-btn" onclick="answer(this,'q3',true)">3NF</button>
+            <button class="quiz-btn" onclick="answer(this,'q3',false)">Ingen — det er korrekt normaliseret</button>
+        </div>
+
+        <div class="quiz-question" id="q4">
+            <p>4. Hvad er en partiel afhængighed?</p>
+            <button class="quiz-btn" onclick="answer(this,'q4',false)">En attribut afhænger af en non-key
+                attribut</button>
+            <button class="quiz-btn" onclick="answer(this,'q4',true)">En attribut afhænger kun af en del af en sammensat
+                primærnøgle</button>
+            <button class="quiz-btn" onclick="answer(this,'q4',false)">En attribut afhænger af flere tabeller på én
+                gang</button>
+            <button class="quiz-btn" onclick="answer(this,'q4',false)">En relation har ingen primærnøgle</button>
+        </div>
+
+        <div class="quiz-question" id="q5">
+            <p>5. Hvad betyder NULL i SQL?</p>
+            <button class="quiz-btn" onclick="answer(this,'q5',false)">Nul (0)</button>
+            <button class="quiz-btn" onclick="answer(this,'q5',false)">Tom streng ("")</button>
+            <button class="quiz-btn" onclick="answer(this,'q5',true)">Ikke defineret / ukendt værdi</button>
+            <button class="quiz-btn" onclick="answer(this,'q5',false)">Slettet række</button>
+        </div>
+
+        <div class="quiz-question" id="q6">
+            <p>6. Hvilken SQL-kommando bruges til at ændre eksisterende data i en tabel?</p>
+            <button class="quiz-btn" onclick="answer(this,'q6',false)">INSERT INTO</button>
+            <button class="quiz-btn" onclick="answer(this,'q6',true)">UPDATE ... SET</button>
+            <button class="quiz-btn" onclick="answer(this,'q6',false)">ALTER TABLE</button>
+            <button class="quiz-btn" onclick="answer(this,'q6',false)">MODIFY</button>
+        </div>
+
+        <div class="quiz-question" id="q7">
+            <p>7. Hvad er forskellen på CHAR(n) og VARCHAR(n)?</p>
+            <button class="quiz-btn" onclick="answer(this,'q7',false)">CHAR er til tal, VARCHAR er til tekst</button>
+            <button class="quiz-btn" onclick="answer(this,'q7',true)">CHAR har fast længde n, VARCHAR har variabel
+                længde op til n</button>
+            <button class="quiz-btn" onclick="answer(this,'q7',false)">VARCHAR kan ikke bruges i
+                WHERE-betingelser</button>
+            <button class="quiz-btn" onclick="answer(this,'q7',false)">Der er ingen praktisk forskel</button>
+        </div>
+
+        <div class="quiz-question" id="q8">
+            <p>8. Hvilken anomaly opstår når sletning af en række utilsigtet fjerner anden vigtig information?</p>
+            <button class="quiz-btn" onclick="answer(this,'q8',false)">Update anomaly</button>
+            <button class="quiz-btn" onclick="answer(this,'q8',false)">Insertion anomaly</button>
+            <button class="quiz-btn" onclick="answer(this,'q8',true)">Deletion anomaly</button>
+            <button class="quiz-btn" onclick="answer(this,'q8',false)">Null anomaly</button>
+        </div>
+
+        <div class="quiz-question" id="q9">
+            <p>9. Hvordan erklæres en fremmednøgle i CREATE TABLE?</p>
+            <button class="quiz-btn" onclick="answer(this,'q9',false)">FOREIGN KEY deptno → dept(deptno)</button>
+            <button class="quiz-btn" onclick="answer(this,'q9',true)">CONSTRAINT FK_emp FOREIGN KEY (deptno) REFERENCES
+                dept(deptno)</button>
+            <button class="quiz-btn" onclick="answer(this,'q9',false)">LINK KEY (deptno) TO dept</button>
+            <button class="quiz-btn" onclick="answer(this,'q9',false)">REF (deptno) IN dept</button>
+        </div>
+
+        <div class="quiz-question" id="q10">
+            <p>10. En tabel har PK (ono, partid). pname afhænger kun af partid. Hvilken normalform er brudt, og hvad er
+                løsningen?</p>
+            <button class="quiz-btn" onclick="answer(this,'q10',false)">1NF — tilføj atomiske værdier</button>
+            <button class="quiz-btn" onclick="answer(this,'q10',true)">2NF — flyt pname til en separat part-tabel med
+                partid som PK</button>
+            <button class="quiz-btn" onclick="answer(this,'q10',false)">3NF — fjern transitive afhængigheder</button>
+            <button class="quiz-btn" onclick="answer(this,'q10',false)">Ingen normalform er brudt</button>
+        </div>
+
+        <button class="restart-btn" onclick="restartQuiz()">↺ Start forfra</button>
+
+        <!-- MINE NOTER -->
+        <h2>📝 Mine noter</h2>
+        <textarea placeholder="Skriv dine egne noter her…"></textarea>
+
+        <!-- KILDER -->
+        <h2>📚 Kilder og pensum</h2>
+        <ul class="sources">
+            <li>Forelæsning 16: Databaser 2 — Ole Torp Lassen, CBS HA(it), 2026</li>
+            <li>Kapitel 1, 2, 3 i kursusbogen (ekstra øvelser på Canvas)</li>
+        </ul>
+
+        <nav class="note-nav" style="margin-top:3rem">
+            <a href="/noter/programmering/programmering-L15-2026-03-02-er-model.html">← Lektion 15</a>
+            <a href="/">🏠 Oversigt</a>
+            <a href="/noter/programmering/programmering-L17-2026-03-16-videregaaende-sql.html">Lektion 17 →</a>
+        </nav>
+
+    </div>
+
+    <footer>
+        Pensummit &mdash; HA(it), CBS · <span id="year"></span>
+    </footer>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                fontSize: '15px',
+                fontFamily: 'DM Sans, sans-serif',
+                primaryColor: '#f0e8e3',
+                primaryBorderColor: '#c8502a',
+                primaryTextColor: '#1a1814',
+                lineColor: '#c8502a',
+                background: '#ffffff',
+                mainBkg: '#ffffff',
+                actorBkg: '#ffffff',
+                actorBorder: '#c8502a',
+                actorTextColor: '#1a1814',
+                actorLineColor: '#c8502a',
+                signalColor: '#1a1814',
+                signalTextColor: '#1a1814',
+            }
+        });
+
+        let score = 0;
+        const total = document.querySelectorAll('.quiz-question').length;
+
+        function answer(btn, qId, isCorrect) {
+            const q = document.getElementById(qId);
+            if (q.dataset.done) return;
+            q.dataset.done = '1';
+            q.querySelectorAll('.quiz-btn').forEach(b => {
+                b.disabled = true;
+                if (b.onclick.toString().includes('true')) b.classList.add('correct');
+            });
+            if (!isCorrect) btn.classList.add('wrong');
+            else score++;
+            document.getElementById('score-display').textContent = `Score: ${score} / ${total}`;
+        }
+
+        function restartQuiz() {
+            score = 0;
+            document.querySelectorAll('.quiz-question').forEach(q => {
+                delete q.dataset.done;
+                q.querySelectorAll('.quiz-btn').forEach(b => {
+                    b.disabled = false;
+                    b.classList.remove('correct', 'wrong');
+                });
+            });
+            document.getElementById('score-display').textContent = `Score: 0 / ${total}`;
+        }
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+
+</body>
+
+</html>

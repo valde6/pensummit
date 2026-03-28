@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Videregående SQL — Pensummit</title>
+    <meta name="description"
+        content="SELECT, JOIN, UNION, INTERSECT, EXCEPT og subqueries — videregående SQL-forespørgsler." />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 16px 18px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.87rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 0.88rem;
+        }
+
+        .kw {
+            color: #66d9ef;
+        }
+
+        .str {
+            color: #a6e22e;
+        }
+
+        .cm {
+            color: #75715e;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body data-fag="programmering">
+
+    <header>
+        <a class="logo" href="/">Pensum<span>mit</span></a>
+        <nav>
+            <a href="/#it-projektledelse">IT-Projektledelse</a>
+            <a href="/#programmering">Programmering</a>
+            <a href="/#organisation">Organisation</a>
+            <a href="/#oekonomi">Økonomi</a>
+        </nav>
+    </header>
+
+    <div class="note-page">
+
+        <nav class="note-nav">
+            <a href="/noter/programmering/programmering-L16-2026-03-09-relationel-model.html">← Lektion 16</a>
+            <a href="/">🏠 Oversigt</a>
+            <a href="/noter/programmering/programmering-L18-2026-03-23-webserver-api.html">Lektion 18 →</a>
+        </nav>
+
+        <header class="note-header">
+            <h1>Videregående SQL</h1>
+            <p class="note-meta">Programmering & Databaser · 16. marts 2026 · Ole Torp Lassen</p>
+            <div class="tags">
+                <span class="tag">SQL</span>
+                <span class="tag">SELECT</span>
+                <span class="tag">JOIN</span>
+                <span class="tag">UNION</span>
+                <span class="tag">INTERSECT</span>
+                <span class="tag">EXCEPT</span>
+                <span class="tag">Subquery</span>
+                <span class="tag">GROUP BY</span>
+                <span class="tag">Aggregering</span>
+            </div>
+            <p class="timestamp">Genereret 28. marts 2026</p>
+        </header>
+
+        <!-- OPSUMMERING -->
+        <h2>📋 Opsummering</h2>
+        <p>Forelæsning 17 dykker ned i SQL-forespørgsler fra simple single-table queries til komplekse multi-table
+            operationer. Den grundlæggende SELECT-anatomi er <code>SELECT ... FROM ... WHERE ... ORDER BY</code>,
+            hvortil man kan tilføje <code>DISTINCT</code> for at fjerne dubletter, aggregeringsfunktioner som
+            <code>COUNT</code>, <code>MIN</code>, <code>MAX</code>, <code>SUM</code> og <code>AVG</code>, samt
+            <code>GROUP BY</code> for at gruppere resultater.</p>
+        <p>Multi-table forespørgsler bygger på mængdeteori: relationer ses som mængder, og man kan kombinere dem via
+            JOIN (inner join / equijoin), UNION (foreningsmængde), INTERSECT (fællesmængde) og EXCEPT/MINUS
+            (differensmængde).</p>
+        <p>Subqueries giver mulighed for at indlejre én forespørgsel inden i en anden — resultatet af en forespørgsel er
+            altid en tabel, der kan bruges som input til en anden forespørgsel.</p>
+
+        <!-- BEGREBER -->
+        <h2>🔑 Vigtige begreber</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Begreb</th>
+                    <th>Definition</th>
+                    <th>Eksempel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SELECT-FROM-WHERE</strong></td>
+                    <td>Den grundlæggende SQL-forespørgsels-anatomi. SELECT projicerer kolonner, FROM angiver tabel,
+                        WHERE filtrerer rækker.</td>
+                    <td><code>SELECT ename FROM emp WHERE sal > 2000</code></td>
+                </tr>
+                <tr>
+                    <td><strong>DISTINCT</strong></td>
+                    <td>Fjerner dubletter fra resultatet.</td>
+                    <td><code>SELECT DISTINCT deptno FROM emp</code></td>
+                </tr>
+                <tr>
+                    <td><strong>ORDER BY</strong></td>
+                    <td>Sorterer resultatet. ASC = stigende (default), DESC = faldende.</td>
+                    <td><code>ORDER BY deptno ASC, hiredate DESC</code></td>
+                </tr>
+                <tr>
+                    <td><strong>GROUP BY</strong></td>
+                    <td>Grupperer rækker med samme værdi i en kolonne — bruges med aggregeringsfunktioner.</td>
+                    <td><code>GROUP BY deptno</code> → min/max løn per afdeling</td>
+                </tr>
+                <tr>
+                    <td><strong>Aggregeringsfunktioner</strong></td>
+                    <td>COUNT, MIN, MAX, SUM, AVG — beregner værdier over en gruppe rækker. Ignorerer NULL (undtagen
+                        COUNT).</td>
+                    <td><code>SELECT count(*), avg(sal) FROM emp</code></td>
+                </tr>
+                <tr>
+                    <td><strong>INNER JOIN</strong></td>
+                    <td>Kombinerer rækker fra to tabeller baseret på en betingelse (equijoin). Kun rækker med match i
+                        begge tabeller inkluderes.</td>
+                    <td><code>FROM emp INNER JOIN dept ON emp.deptno = dept.deptno</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Subquery</strong></td>
+                    <td>En forespørgsel indlejret i en anden. Resultatet bruges som tabel eller betingelsesværdi.</td>
+                    <td><code>WHERE deptno = (SELECT deptno FROM dept WHERE dname='SALES')</code></td>
+                </tr>
+                <tr>
+                    <td><strong>UNION</strong></td>
+                    <td>Foreningsmængde: kombinerer to tabellers rækker og fjerner dubletter. Tabellerne skal være
+                        union-kompatible.</td>
+                    <td><code>SELECT ... UNION SELECT ...</code></td>
+                </tr>
+                <tr>
+                    <td><strong>INTERSECT</strong></td>
+                    <td>Fællesmængde: returnerer kun rækker der optræder i begge tabeller.</td>
+                    <td><code>SELECT ... INTERSECT SELECT ...</code></td>
+                </tr>
+                <tr>
+                    <td><strong>EXCEPT</strong></td>
+                    <td>Differensmængde: rækker i første tabel men ikke i anden. Asymmetrisk — rækkefølgen betyder
+                        noget.</td>
+                    <td><code>SELECT ... EXCEPT SELECT ...</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- DIAGRAMMER -->
+        <h2>🗺️ Overblik</h2>
+
+        <div class="diagram-wrap">
+            <pre class="mermaid">
+graph LR
+  SFW["SELECT-FROM-WHERE<br/>single table"] --> AGG["+ Aggregering<br/>COUNT MIN MAX SUM AVG"]
+  SFW --> GRP["+ GROUP BY<br/>per gruppe"]
+  SFW --> ORD["+ ORDER BY<br/>sortering"]
+  AGG --> MULTI["Multi-table<br/>forespørgsler"]
+  MULTI --> JOIN["INNER JOIN"]
+  MULTI --> SET["Mængde-operationer<br/>UNION / INTERSECT / EXCEPT"]
+  MULTI --> SUB["Subqueries"]
+
+  style SFW fill:#c8502a,color:#fff,stroke:#a03d1f
+  style MULTI fill:#d4633a,color:#fff,stroke:#a03d1f
+  style AGG fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style GRP fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style ORD fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style JOIN fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style SET fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style SUB fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+      </pre>
+        </div>
+
+        <div class="diagram-wrap">
+            <pre class="mermaid">
+graph LR
+  A["Tabel A"] --> U["UNION<br/>Alle rækker<br/>fra begge"]
+  B["Tabel B"] --> U
+  A --> I["INTERSECT<br/>Kun fælles<br/>rækker"]
+  B --> I
+  A --> E["EXCEPT A-B<br/>Kun i A,<br/>ikke i B"]
+  B --> E
+
+  style A fill:#c8502a,color:#fff,stroke:#a03d1f
+  style B fill:#d4633a,color:#fff,stroke:#a03d1f
+  style U fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style I fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+  style E fill:#f0e8e3,stroke:#c8502a,color:#1a1814
+      </pre>
+        </div>
+
+        <!-- EKSAMEN -->
+        <div class="exam-box">
+            <h2>🎯 Til eksamen</h2>
+            <ul>
+                <li><strong>SELECT-anatomi:</strong>
+                    <code>SELECT [DISTINCT] kolonner FROM tabel [WHERE betingelse] [ORDER BY kolonner]</code> — skriv
+                    det udenad.</li>
+                <li><strong>JOIN vs. subquery:</strong> Begge kan give samme resultat. JOIN kombinerer tabeller,
+                    subquery indlejrer én forespørgsel i en anden. Kend begge syntakser.</li>
+                <li><strong>Aggregering:</strong> COUNT tæller alle rækker inkl. NULL. MIN, MAX, AVG, SUM ignorerer
+                    NULL. Brug GROUP BY til at aggregere per gruppe.</li>
+                <li><strong>Mængdeoperationer:</strong> UNION fjerner dubletter (UNION ALL beholder dem). INTERSECT =
+                    fælles rækker. EXCEPT = asymmetrisk differens. Tabellerne skal være union-kompatible.</li>
+                <li><strong>INNER JOIN-syntaks:</strong>
+                    <code>FROM emp INNER JOIN dept ON emp.deptno = dept.deptno</code> — kend den.</li>
+                <li><strong>Subquery-logik:</strong> Forstå den indefra-ud — den inderste forespørgsel køres først og
+                    leverer input til den ydre.</li>
+                <li><strong>BETWEEN, IN, LIKE, IS NULL:</strong> Kend de vigtigste sammenligningsoperatorer i WHERE.
+                </li>
+            </ul>
+        </div>
+
+        <!-- KODE -->
+        <details>
+            <summary>📐 SQL-syntaks reference</summary>
+            <div class="formula-box">
+                <p><strong>SELECT-anatomi</strong></p>
+                <pre><span class="kw">SELECT</span> [<span class="kw">DISTINCT</span>] kolonne(r) [<span class="kw">AS</span> alias]
+<span class="kw">FROM</span> tabel
+[<span class="kw">WHERE</span> betingelse]
+[<span class="kw">GROUP BY</span> kolonne(r)]
+[<span class="kw">ORDER BY</span> kolonne(r) [<span class="kw">ASC</span> | <span class="kw">DESC</span>]];</pre>
+
+                <p style="margin-top:14px"><strong>JOIN</strong></p>
+                <pre><span class="cm">-- Implicit join</span>
+<span class="kw">SELECT</span> ename, dname
+<span class="kw">FROM</span> emp, dept
+<span class="kw">WHERE</span> emp.deptno = dept.deptno
+  <span class="kw">AND</span> job = <span class="str">'SALESMAN'</span>;
+
+<span class="cm">-- INNER JOIN (anbefalet syntaks)</span>
+<span class="kw">SELECT</span> ename, dname
+<span class="kw">FROM</span> emp <span class="kw">INNER JOIN</span> dept
+  <span class="kw">ON</span> emp.deptno = dept.deptno
+<span class="kw">WHERE</span> job = <span class="str">'SALESMAN'</span>;</pre>
+
+                <p style="margin-top:14px"><strong>Subquery</strong></p>
+                <pre><span class="cm">-- Simpel subquery</span>
+<span class="kw">SELECT</span> ename
+<span class="kw">FROM</span> emp
+<span class="kw">WHERE</span> deptno = (
+  <span class="kw">SELECT</span> deptno <span class="kw">FROM</span> dept
+  <span class="kw">WHERE</span> dname = <span class="str">'SALES'</span>
+);
+
+<span class="cm">-- Nested subquery (indefra-ud)</span>
+<span class="kw">SELECT</span> ename, sal
+<span class="kw">FROM</span> emp
+<span class="kw">WHERE</span> sal = (
+  <span class="kw">SELECT</span> <span class="kw">max</span>(sal) <span class="kw">FROM</span> emp
+  <span class="kw">WHERE</span> deptno = (
+    <span class="kw">SELECT</span> deptno <span class="kw">FROM</span> dept
+    <span class="kw">WHERE</span> dname = <span class="str">'SALES'</span>
+  )
+);</pre>
+
+                <p style="margin-top:14px"><strong>Aggregering og GROUP BY</strong></p>
+                <pre><span class="kw">SELECT</span> deptno, <span class="kw">min</span>(SAL), <span class="kw">max</span>(SAL), <span class="kw">avg</span>(SAL)
+<span class="kw">FROM</span> emp
+<span class="kw">GROUP BY</span> deptno;
+
+<span class="kw">SELECT</span> <span class="kw">count</span>(*) <span class="kw">FROM</span> emp;
+<span class="kw">SELECT</span> <span class="kw">count</span>(<span class="kw">DISTINCT</span> JOB) <span class="kw">FROM</span> emp;</pre>
+
+                <p style="margin-top:14px"><strong>Mængdeoperationer</strong></p>
+                <pre><span class="cm">-- UNION (fjerner dubletter)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> emp <span class="kw">UNION</span> <span class="kw">SELECT</span> * <span class="kw">FROM</span> emp2;
+
+<span class="cm">-- INTERSECT (fælles rækker)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> emp <span class="kw">INTERSECT</span> <span class="kw">SELECT</span> * <span class="kw">FROM</span> emp2;
+
+<span class="cm">-- EXCEPT (kun i første tabel)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> emp <span class="kw">EXCEPT</span> <span class="kw">SELECT</span> * <span class="kw">FROM</span> emp2;</pre>
+            </div>
+        </details>
+
+        <!-- UDDYBNING -->
+        <h2>📖 Uddybning</h2>
+
+        <details class="uddybning-item">
+            <summary>WHERE-betingelser og operatorer</summary>
+            <div class="content">
+                <p>Sammenligningsoperatorer: <code>=</code>, <code>!=</code> eller <code>&lt;&gt;</code>,
+                    <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code></p>
+                <p><strong>IN:</strong> <code>WHERE deptno IN (10, 20)</code> — svarer til OR med flere værdier.</p>
+                <p><strong>BETWEEN:</strong> <code>WHERE sal BETWEEN 1500 AND 2500</code> — inklusiv begge grænser.</p>
+                <p><strong>IS NULL / IS NOT NULL:</strong> <code>WHERE mgr IS NOT NULL</code> — brug altid IS, ikke =
+                    ved NULL.</p>
+                <p><strong>Logiske operatorer:</strong> AND, OR, NOT — AND evalueres før OR, brug parenteser ved tvivl.
+                </p>
+            </div>
+        </details>
+
+        <details class="uddybning-item">
+            <summary>JOIN vs. subquery — hvornår bruges hvad?</summary>
+            <div class="content">
+                <p>Begge kan bruges til at hente data fra flere tabeller, men de har forskellig styrke:</p>
+                <p><strong>JOIN</strong> er bedst når du vil vise kolonner fra begge tabeller i resultatet. Det er
+                    typisk mere effektivt og læsbart for simple kombinationer.</p>
+                <p><strong>Subquery</strong> er bedst når du bruger resultatet som en betingelse eller som en enkelt
+                    værdi. F.eks. "find den medarbejder der tjener mest i sales" — her er nested subquery den naturlige
+                    løsning.</p>
+                <p>Subqueries læses indefra-ud: den inderste forespørgsel køres først og leverer en tabel/værdi til den
+                    ydre.</p>
+            </div>
+        </details>
+
+        <details class="uddybning-item">
+            <summary>Mængdeoperationer — union-kompatibilitet</summary>
+            <div class="content">
+                <p>For at bruge UNION, INTERSECT eller EXCEPT skal de to forespørgsler returnere tabeller med samme
+                    antal kolonner, hvor parvist matchende kolonner er fra samme datatype (domæne).</p>
+                <p><strong>UNION vs UNION ALL:</strong> UNION fjerner dubletter automatisk. UNION ALL beholder alle
+                    rækker inkl. dubletter — hurtigere men giver mere data.</p>
+                <p><strong>EXCEPT er asymmetrisk:</strong> A EXCEPT B ≠ B EXCEPT A — rækkefølgen af forespørgslerne er
+                    vigtig.</p>
+                <p><strong>INTERSECT og NULL:</strong> I INTERSECT behandles NULL == NULL, dvs. to NULL-værdier
+                    betragtes som ens.</p>
+            </div>
+        </details>
+
+        <details class="uddybning-item">
+            <summary>Streng-funktioner og nyttige operatorer</summary>
+            <div class="content">
+                <p><strong>upper(s)</strong> — konverterer til store bogstaver</p>
+                <p><strong>lower(s)</strong> — konverterer til små bogstaver</p>
+                <p><strong>length(s)</strong> — antal tegn i strengen</p>
+                <p><strong>substr(s, n, m)</strong> — delstreng på m tegn fra position n. Eks:
+                    <code>substr('DATABASE SYSTEMS', 10, 7)</code> → 'SYSTEMS'</p>
+                <p><strong>concat(s1, s2)</strong> — sammensætter to strenge</p>
+                <p>Aritmetik: <code>sal * 1.55</code>, <code>max(SAL) - min(SAL)</code> — kan bruges direkte i SELECT.
+                </p>
+            </div>
+        </details>
+
+        <!-- QUIZ -->
+        <h2>🧠 Quiz</h2>
+        <p class="score-display" id="score-display">Score: 0 / 10</p>
+
+        <div class="quiz-question" id="q1">
+            <p>1. Hvad gør DISTINCT i en SELECT-forespørgsel?</p>
+            <button class="quiz-btn" onclick="answer(this,'q1',false)">Sorterer resultatet alfabetisk</button>
+            <button class="quiz-btn" onclick="answer(this,'q1',true)">Fjerner dubletter fra resultatet</button>
+            <button class="quiz-btn" onclick="answer(this,'q1',false)">Vælger kun den første række</button>
+            <button class="quiz-btn" onclick="answer(this,'q1',false)">Filtrerer NULL-værdier fra</button>
+        </div>
+
+        <div class="quiz-question" id="q2">
+            <p>2. Du vil finde gennemsnitlig løn per afdeling. Hvilke SQL-nøgleord har du brug for?</p>
+            <button class="quiz-btn" onclick="answer(this,'q2',false)">WHERE og COUNT</button>
+            <button class="quiz-btn" onclick="answer(this,'q2',true)">GROUP BY og AVG</button>
+            <button class="quiz-btn" onclick="answer(this,'q2',false)">ORDER BY og SUM</button>
+            <button class="quiz-btn" onclick="answer(this,'q2',false)">DISTINCT og MIN</button>
+        </div>
+
+        <div class="quiz-question" id="q3">
+            <p>3. Hvad returnerer INNER JOIN?</p>
+            <button class="quiz-btn" onclick="answer(this,'q3',false)">Alle rækker fra begge tabeller</button>
+            <button class="quiz-btn" onclick="answer(this,'q3',false)">Alle rækker fra venstre tabel</button>
+            <button class="quiz-btn" onclick="answer(this,'q3',true)">Kun rækker med match i begge tabeller</button>
+            <button class="quiz-btn" onclick="answer(this,'q3',false)">Rækker der ikke har match</button>
+        </div>
+
+        <div class="quiz-question" id="q4">
+            <p>4. Hvad er forskellen på UNION og UNION ALL?</p>
+            <button class="quiz-btn" onclick="answer(this,'q4',false)">UNION ALL er hurtigere men kræver
+                union-kompatible tabeller</button>
+            <button class="quiz-btn" onclick="answer(this,'q4',true)">UNION fjerner dubletter, UNION ALL beholder
+                dem</button>
+            <button class="quiz-btn" onclick="answer(this,'q4',false)">UNION sorterer resultatet, UNION ALL gør
+                ikke</button>
+            <button class="quiz-btn" onclick="answer(this,'q4',false)">Der er ingen forskel</button>
+        </div>
+
+        <div class="quiz-question" id="q5">
+            <p>5. Hvad betyder det at tabeller er "union-kompatible"?</p>
+            <button class="quiz-btn" onclick="answer(this,'q5',false)">De har samme primærnøgle</button>
+            <button class="quiz-btn" onclick="answer(this,'q5',false)">De er i samme database</button>
+            <button class="quiz-btn" onclick="answer(this,'q5',true)">Samme antal kolonner, parvist fra samme
+                datatype</button>
+            <button class="quiz-btn" onclick="answer(this,'q5',false)">De har samme antal rækker</button>
+        </div>
+
+        <div class="quiz-question" id="q6">
+            <p>6. Hvilken aggregeringsfunktion tæller NULL-rækker med?</p>
+            <button class="quiz-btn" onclick="answer(this,'q6',false)">AVG</button>
+            <button class="quiz-btn" onclick="answer(this,'q6',false)">SUM</button>
+            <button class="quiz-btn" onclick="answer(this,'q6',true)">COUNT(*)</button>
+            <button class="quiz-btn" onclick="answer(this,'q6',false)">MIN</button>
+        </div>
+
+        <div class="quiz-question" id="q7">
+            <p>7. Du vil finde medarbejdere i SALES-afdelingen. Du har tabellerne emp og dept. Hvad er den korrekte
+                INNER JOIN-syntaks?</p>
+            <button class="quiz-btn" onclick="answer(this,'q7',false)">FROM emp JOIN dept WHERE deptno = deptno</button>
+            <button class="quiz-btn" onclick="answer(this,'q7',true)">FROM emp INNER JOIN dept ON emp.deptno =
+                dept.deptno</button>
+            <button class="quiz-btn" onclick="answer(this,'q7',false)">FROM emp, dept INNER JOIN ON deptno</button>
+            <button class="quiz-btn" onclick="answer(this,'q7',false)">SELECT emp JOIN dept USING deptno</button>
+        </div>
+
+        <div class="quiz-question" id="q8">
+            <p>8. Hvad returnerer A EXCEPT B?</p>
+            <button class="quiz-btn" onclick="answer(this,'q8',false)">Rækker der er i begge tabeller</button>
+            <button class="quiz-btn" onclick="answer(this,'q8',false)">Alle rækker fra begge tabeller</button>
+            <button class="quiz-btn" onclick="answer(this,'q8',true)">Rækker der kun er i A og ikke i B</button>
+            <button class="quiz-btn" onclick="answer(this,'q8',false)">Rækker der kun er i B og ikke i A</button>
+        </div>
+
+        <div class="quiz-question" id="q9">
+            <p>9. Hvad gør substr('DATABASE SYSTEMS', 10, 7)?</p>
+            <button class="quiz-btn" onclick="answer(this,'q9',false)">Returnerer 'DATABASE'</button>
+            <button class="quiz-btn" onclick="answer(this,'q9',true)">Returnerer 'SYSTEMS'</button>
+            <button class="quiz-btn" onclick="answer(this,'q9',false)">Returnerer de første 7 tegn</button>
+            <button class="quiz-btn" onclick="answer(this,'q9',false)">Returnerer fejl — 10 er uden for
+                strengen</button>
+        </div>
+
+        <div class="quiz-question" id="q10">
+            <p>10. Hvilken rækkefølge evalueres en nested subquery i?</p>
+            <button class="quiz-btn" onclick="answer(this,'q10',false)">Udefra-ind — den ydre forespørgsel køres
+                først</button>
+            <button class="quiz-btn" onclick="answer(this,'q10',true)">Indefra-ud — den inderste forespørgsel køres
+                først</button>
+            <button class="quiz-btn" onclick="answer(this,'q10',false)">Parallelt — alle forespørgsler køres
+                samtidigt</button>
+            <button class="quiz-btn" onclick="answer(this,'q10',false)">Tilfældig rækkefølge bestemt af
+                SQL-motoren</button>
+        </div>
+
+        <button class="restart-btn" onclick="restartQuiz()">↺ Start forfra</button>
+
+        <!-- MINE NOTER -->
+        <h2>📝 Mine noter</h2>
+        <textarea placeholder="Skriv dine egne noter her…"></textarea>
+
+        <!-- KILDER -->
+        <h2>📚 Kilder og pensum</h2>
+        <ul class="sources">
+            <li>Forelæsning 17: Databaser 3 — Ole Torp Lassen, CBS HA(it), 2026</li>
+            <li>Kapitel 3, 6 og 8 i kursusbogen (ekstra noter og øvelser på Canvas)</li>
+        </ul>
+
+        <nav class="note-nav" style="margin-top:3rem">
+            <a href="/noter/programmering/programmering-L16-2026-03-09-relationel-model.html">← Lektion 16</a>
+            <a href="/">🏠 Oversigt</a>
+            <a href="/noter/programmering/programmering-L18-2026-03-23-webserver-api.html">Lektion 18 →</a>
+        </nav>
+
+    </div>
+
+    <footer>
+        Pensummit &mdash; HA(it), CBS · <span id="year"></span>
+    </footer>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                fontSize: '15px',
+                fontFamily: 'DM Sans, sans-serif',
+                primaryColor: '#f0e8e3',
+                primaryBorderColor: '#c8502a',
+                primaryTextColor: '#1a1814',
+                lineColor: '#c8502a',
+                background: '#ffffff',
+                mainBkg: '#ffffff',
+            }
+        });
+
+        let score = 0;
+        const total = document.querySelectorAll('.quiz-question').length;
+
+        function answer(btn, qId, isCorrect) {
+            const q = document.getElementById(qId);
+            if (q.dataset.done) return;
+            q.dataset.done = '1';
+            q.querySelectorAll('.quiz-btn').forEach(b => {
+                b.disabled = true;
+                if (b.onclick.toString().includes('true')) b.classList.add('correct');
+            });
+            if (!isCorrect) btn.classList.add('wrong');
+            else score++;
+            document.getElementById('score-display').textContent = `Score: ${score} / ${total}`;
+        }
+
+        function restartQuiz() {
+            score = 0;
+            document.querySelectorAll('.quiz-question').forEach(q => {
+                delete q.dataset.done;
+                q.querySelectorAll('.quiz-btn').forEach(b => {
+                    b.disabled = false;
+                    b.classList.remove('correct', 'wrong');
+                });
+            });
+            document.getElementById('score-display').textContent = `Score: 0 / ${total}`;
+        }
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+
+</body>
+
+</html>
