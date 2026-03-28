@@ -1,134 +1,238 @@
 <!DOCTYPE html>
 <html lang="da">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Webserver og API'er — Pensummit</title>
-  <meta name="description" content="HTTP, REST API og Express.js — byg backend til eksamensopgaven." />
-  <link rel="stylesheet" href="/css/main.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <style>
-    /* Kode-blokke (kun til denne note) */
-    pre {
-      background: #2d2d2d;
-      color: #f8f8f2;
-      padding: 16px 18px;
-      border-radius: 8px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.87rem;
-      line-height: 1.6;
-      overflow-x: auto;
-      margin: 12px 0;
-    }
-    code {
-      font-family: 'Courier New', monospace;
-      background: #2d2d2d;
-      color: #f8f8f2;
-      padding: 2px 7px;
-      border-radius: 4px;
-      font-size: 0.88rem;
-    }
-    .kw  { color: #66d9ef; }
-    .str { color: #a6e22e; }
-    .cm  { color: #75715e; font-style: italic; }
-    .fn  { color: #f92672; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webserver og API'er — Pensummit</title>
+    <meta name="description" content="HTTP, REST API og Express.js — byg backend til eksamensopgaven." />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        .diagram-wrap {
+            background: var(--surface) !important;
+        }
 
-    /* Øvelse-trin */
-    .step {
-      background: var(--accent-light);
-      border-left: 4px solid var(--accent);
-      border-radius: 0 8px 8px 0;
-      padding: 14px 18px;
-      margin-bottom: 14px;
-    }
-    .step-num { font-weight: 700; color: var(--accent); font-size: 1rem; margin-bottom: 6px; }
+        .mermaid svg {
+            background: transparent !important;
+        }
 
-    .hint-btn {
-      background: none;
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      border-radius: 6px;
-      padding: 5px 12px;
-      font-size: 0.82rem;
-      cursor: pointer;
-      margin-top: 8px;
-      font-family: 'DM Sans', sans-serif;
-    }
-    .hint-btn:hover { background: var(--accent-light); }
-    .hint-text { display: none; background: var(--exam-bg); border: 1px solid var(--exam-border); border-radius: 6px; padding: 10px 14px; margin-top: 8px; font-size: 0.87rem; }
-    .hint-text.visible { display: block; }
+        /* Kode-blokke (kun til denne note) */
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 16px 18px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.87rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
 
-    .bonus-box { background: #d4edda; border-radius: 8px; padding: 14px 18px; margin-top: 8px; border-left: 4px solid #28a745; }
-  </style>
+        code {
+            font-family: 'Courier New', monospace;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 0.88rem;
+        }
+
+        .kw {
+            color: #66d9ef;
+        }
+
+        .str {
+            color: #a6e22e;
+        }
+
+        .cm {
+            color: #75715e;
+            font-style: italic;
+        }
+
+        .fn {
+            color: #f92672;
+        }
+
+        /* Øvelse-trin */
+        .step {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+        }
+
+        .step-num {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .hint-btn {
+            background: none;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            border-radius: 6px;
+            padding: 5px 12px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            margin-top: 8px;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .hint-btn:hover {
+            background: var(--accent-light);
+        }
+
+        .hint-text {
+            display: none;
+            background: var(--exam-bg);
+            border: 1px solid var(--exam-border);
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-top: 8px;
+            font-size: 0.87rem;
+        }
+
+        .hint-text.visible {
+            display: block;
+        }
+
+        .bonus-box {
+            background: #d4edda;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-top: 8px;
+            border-left: 4px solid #28a745;
+        }
+    </style>
 </head>
+
 <body data-fag="programmering">
 
-  <header>
-    <a class="logo" href="/">Pensum<span>mit</span></a>
-    <nav>
-      <a href="/#it-projektledelse">IT-Projektledelse</a>
-      <a href="/#programmering">Programmering</a>
-      <a href="/#organisation">Organisation</a>
-      <a href="/#oekonomi">Økonomi</a>
-    </nav>
-  </header>
-
-  <div class="note-page">
-
-    <nav class="note-nav">
-      <a href="#" class="disabled">← Lektion 17</a>
-      <a href="/">🏠 Oversigt</a>
-      <a href="#" class="disabled">Lektion 19 →</a>
-    </nav>
-
-    <header class="note-header">
-      <h1>Webserver og API'er</h1>
-      <p class="note-meta">Programmering & Databaser · 23. marts 2026 · Stefan</p>
-      <div class="tags">
-        <span class="tag">HTTP</span>
-        <span class="tag">REST API</span>
-        <span class="tag">Express.js</span>
-        <span class="tag">Node.js</span>
-        <span class="tag">CRUD</span>
-        <span class="tag">JSON</span>
-        <span class="tag">Client-Server</span>
-        <span class="tag">Endpoints</span>
-      </div>
-      <p class="timestamp">Genereret 28. marts 2026</p>
+    <header>
+        <a class="logo" href="/">Pensum<span>mit</span></a>
+        <nav>
+            <a href="/#it-projektledelse">IT-Projektledelse</a>
+            <a href="/#programmering">Programmering</a>
+            <a href="/#organisation">Organisation</a>
+            <a href="/#oekonomi">Økonomi</a>
+        </nav>
     </header>
 
-    <!-- OPSUMMERING -->
-    <h2>📋 Opsummering</h2>
-    <p>Forelæsning 18 introducerer den tekniske rygrad i eksamensapplikationen: webserveren og API'et. En server stiller ressourcer til rådighed over et netværk, og HTTP er protokollen klient og server taler sammen med — én request giver ét svar.</p>
-    <p>Et Web API fungerer som en kontrolleret "dør" ind til systemet: klienten (browseren) kender kun API'ets endpoints, ikke den bagvedliggende logik eller database. Det sikrer adgangskontrol og <em>separation of concerns</em>.</p>
-    <p>I Node.js bygges serveren med <strong>Express</strong>, der lader én definere routes for hver HTTP-metode. CRUD-operationerne Create, Read, Update og Delete svarer direkte til POST, GET, PUT og DELETE — præcis det mønster eksamensopgaven kræver.</p>
+    <div class="note-page">
 
-    <!-- BEGREBER -->
-    <h2>🔑 Vigtige begreber</h2>
-    <table>
-      <thead>
-        <tr><th>Begreb</th><th>Definition</th><th>Eksempel / kontekst</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>HTTP</strong></td><td>HyperText Transfer Protocol — protokollen klient og server bruger til at kommunikere. 1 request = 1 svar.</td><td><code>GET /pizza HTTP/1.1</code> → server svarer <code>200 OK</code></td></tr>
-        <tr><td><strong>API</strong></td><td>Application Programming Interface — en mellemmand der lader programmer tilgå hinandens data kontrolleret, uden at kende den interne implementering.</td><td>Flybetalingssiden kalder flyselskabernes API'er for at hente priser</td></tr>
-        <tr><td><strong>Endpoint</strong></td><td>En specifik URL + HTTP-metode der udgør ét indgangspunkt i API'et.</td><td><code>GET /todos</code>, <code>POST /todos</code>, <code>DELETE /todos/3</code></td></tr>
-        <tr><td><strong>CRUD</strong></td><td>Create, Read, Update, Delete — de fire grundoperationer på data.</td><td>Svarer til POST, GET, PUT, DELETE i HTTP</td></tr>
-        <tr><td><strong>Express.js</strong></td><td>Node.js framework til at bygge webservere og API'er hurtigt og struktureret.</td><td><code>npm install express</code>, derefter <code>app.get('/route', ...)</code></td></tr>
-        <tr><td><strong>JSON</strong></td><td>JavaScript Object Notation — dataformat API'et bruger til at sende og modtage data.</td><td><code>{ "id": 1, "task": "Lær Express" }</code></td></tr>
-        <tr><td><strong>Status code</strong></td><td>Talkode i HTTP-svaret der fortæller om requesten lykkedes.</td><td>200 OK, 201 Created, 404 Not Found, 500 Server Error</td></tr>
-        <tr><td><strong>Separation of concerns</strong></td><td>Princippet om at holde database, API-logik og frontend adskilt — hver del har ét ansvar.</td><td>Klienten kender ikke databasen, kun API-endpointene</td></tr>
-        <tr><td><strong>Postman</strong></td><td>HTTP-testværktøj til at afprøve POST, PUT og DELETE endpoints.</td><td>Send en POST-request med JSON-body til din lokale server</td></tr>
-        <tr><td><strong>localhost:3000</strong></td><td>Din lokale server kører på din egen maskine og lytter på port 3000.</td><td><code>app.listen(3000)</code> i Express</td></tr>
-      </tbody>
-    </table>
+        <nav class="note-nav">
+            <a href="#" class="disabled">← Lektion 17</a>
+            <a href="/">🏠 Oversigt</a>
+            <a href="#" class="disabled">Lektion 19 →</a>
+        </nav>
 
-    <!-- DIAGRAMMER -->
-    <h2>🗺️ Overblik</h2>
+        <header class="note-header">
+            <h1>Webserver og API'er</h1>
+            <p class="note-meta">Programmering & Databaser · 23. marts 2026 · Stefan</p>
+            <div class="tags">
+                <span class="tag">HTTP</span>
+                <span class="tag">REST API</span>
+                <span class="tag">Express.js</span>
+                <span class="tag">Node.js</span>
+                <span class="tag">CRUD</span>
+                <span class="tag">JSON</span>
+                <span class="tag">Client-Server</span>
+                <span class="tag">Endpoints</span>
+            </div>
+            <p class="timestamp">Genereret 28. marts 2026</p>
+        </header>
 
-    <div class="diagram-wrap">
-      <pre class="mermaid">
+        <!-- OPSUMMERING -->
+        <h2>📋 Opsummering</h2>
+        <p>Forelæsning 18 introducerer den tekniske rygrad i eksamensapplikationen: webserveren og API'et. En server
+            stiller ressourcer til rådighed over et netværk, og HTTP er protokollen klient og server taler sammen med —
+            én request giver ét svar.</p>
+        <p>Et Web API fungerer som en kontrolleret "dør" ind til systemet: klienten (browseren) kender kun API'ets
+            endpoints, ikke den bagvedliggende logik eller database. Det sikrer adgangskontrol og <em>separation of
+                concerns</em>.</p>
+        <p>I Node.js bygges serveren med <strong>Express</strong>, der lader én definere routes for hver HTTP-metode.
+            CRUD-operationerne Create, Read, Update og Delete svarer direkte til POST, GET, PUT og DELETE — præcis det
+            mønster eksamensopgaven kræver.</p>
+
+        <!-- BEGREBER -->
+        <h2>🔑 Vigtige begreber</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Begreb</th>
+                    <th>Definition</th>
+                    <th>Eksempel / kontekst</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>HTTP</strong></td>
+                    <td>HyperText Transfer Protocol — protokollen klient og server bruger til at kommunikere. 1 request
+                        = 1 svar.</td>
+                    <td><code>GET /pizza HTTP/1.1</code> → server svarer <code>200 OK</code></td>
+                </tr>
+                <tr>
+                    <td><strong>API</strong></td>
+                    <td>Application Programming Interface — en mellemmand der lader programmer tilgå hinandens data
+                        kontrolleret, uden at kende den interne implementering.</td>
+                    <td>Flybetalingssiden kalder flyselskabernes API'er for at hente priser</td>
+                </tr>
+                <tr>
+                    <td><strong>Endpoint</strong></td>
+                    <td>En specifik URL + HTTP-metode der udgør ét indgangspunkt i API'et.</td>
+                    <td><code>GET /todos</code>, <code>POST /todos</code>, <code>DELETE /todos/3</code></td>
+                </tr>
+                <tr>
+                    <td><strong>CRUD</strong></td>
+                    <td>Create, Read, Update, Delete — de fire grundoperationer på data.</td>
+                    <td>Svarer til POST, GET, PUT, DELETE i HTTP</td>
+                </tr>
+                <tr>
+                    <td><strong>Express.js</strong></td>
+                    <td>Node.js framework til at bygge webservere og API'er hurtigt og struktureret.</td>
+                    <td><code>npm install express</code>, derefter <code>app.get('/route', ...)</code></td>
+                </tr>
+                <tr>
+                    <td><strong>JSON</strong></td>
+                    <td>JavaScript Object Notation — dataformat API'et bruger til at sende og modtage data.</td>
+                    <td><code>{ "id": 1, "task": "Lær Express" }</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Status code</strong></td>
+                    <td>Talkode i HTTP-svaret der fortæller om requesten lykkedes.</td>
+                    <td>200 OK, 201 Created, 404 Not Found, 500 Server Error</td>
+                </tr>
+                <tr>
+                    <td><strong>Separation of concerns</strong></td>
+                    <td>Princippet om at holde database, API-logik og frontend adskilt — hver del har ét ansvar.</td>
+                    <td>Klienten kender ikke databasen, kun API-endpointene</td>
+                </tr>
+                <tr>
+                    <td><strong>Postman</strong></td>
+                    <td>HTTP-testværktøj til at afprøve POST, PUT og DELETE endpoints.</td>
+                    <td>Send en POST-request med JSON-body til din lokale server</td>
+                </tr>
+                <tr>
+                    <td><strong>localhost:3000</strong></td>
+                    <td>Din lokale server kører på din egen maskine og lytter på port 3000.</td>
+                    <td><code>app.listen(3000)</code> i Express</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- DIAGRAMMER -->
+        <h2>🗺️ Overblik</h2>
+
+        <div class="diagram-wrap">
+            <pre class="mermaid">
 graph LR
   A["<b>Del 1</b><br/>HTTP & APIs"] --> B["<b>Del 2</b><br/>Node.js & Express"]
   B --> C["<b>Del 3</b><br/>Test endpoints"]
@@ -138,10 +242,10 @@ graph LR
   style C fill:#e07850,color:#fff,stroke:#a03d1f
   style D fill:#f0e8e3,stroke:#c8502a,color:#1a1814
       </pre>
-    </div>
+        </div>
 
-    <div class="diagram-wrap">
-      <pre class="mermaid">
+        <div class="diagram-wrap">
+            <pre class="mermaid">
 sequenceDiagram
   participant B as Browser (Klient)
   participant S as Server (Express)
@@ -152,10 +256,10 @@ sequenceDiagram
   B->>S: DELETE /todos/3
   S-->>B: 200 OK
       </pre>
-    </div>
+        </div>
 
-    <div class="diagram-wrap">
-      <pre class="mermaid">
+        <div class="diagram-wrap">
+            <pre class="mermaid">
 graph LR
   C["Create"] --> POST["POST"]
   R["Read"]   --> GET["GET"]
@@ -166,28 +270,35 @@ graph LR
   style PUT  fill:#d69e2e,color:#fff,stroke:#b7791f
   style DEL  fill:#dc3545,color:#fff,stroke:#bd2130
       </pre>
-    </div>
+        </div>
 
-    <!-- EKSAMEN -->
-    <div class="exam-box">
-      <h2>🎯 Til eksamen</h2>
-      <ul>
-        <li><strong>HTTP-metoder og CRUD:</strong> GET=Read, POST=Create, PUT=Update, DELETE=Delete — lær det udenad.</li>
-        <li><strong>Status codes:</strong> 200 OK, 201 Created, 404 Not Found, 400 Bad Request, 500 Internal Server Error.</li>
-        <li><strong>Express-setup:</strong> <code>npm init</code> → <code>npm install express</code> → <code>app.listen(3000)</code>.</li>
-        <li><strong>Route-syntaks:</strong> <code>app.get('/todos', (req, res) => res.json(todos))</code> — skriv det uden at slå op.</li>
-        <li><strong>Middleware:</strong> <code>express.json()</code> er nødvendig for at læse JSON fra POST/PUT bodies.</li>
-        <li><strong>Hvorfor API?</strong> Beskyttelse af databasen, adgangskontrol, separation of concerns — argumentér for dette i rapporten.</li>
-        <li><strong>Eksamensarkitektur:</strong> Browser → Express API → SQL-database. Express er mellemleddet.</li>
-      </ul>
-    </div>
+        <!-- EKSAMEN -->
+        <div class="exam-box">
+            <h2>🎯 Til eksamen</h2>
+            <ul>
+                <li><strong>HTTP-metoder og CRUD:</strong> GET=Read, POST=Create, PUT=Update, DELETE=Delete — lær det
+                    udenad.</li>
+                <li><strong>Status codes:</strong> 200 OK, 201 Created, 404 Not Found, 400 Bad Request, 500 Internal
+                    Server Error.</li>
+                <li><strong>Express-setup:</strong> <code>npm init</code> → <code>npm install express</code> →
+                    <code>app.listen(3000)</code>.</li>
+                <li><strong>Route-syntaks:</strong> <code>app.get('/todos', (req, res) => res.json(todos))</code> —
+                    skriv det uden at slå op.</li>
+                <li><strong>Middleware:</strong> <code>express.json()</code> er nødvendig for at læse JSON fra POST/PUT
+                    bodies.</li>
+                <li><strong>Hvorfor API?</strong> Beskyttelse af databasen, adgangskontrol, separation of concerns —
+                    argumentér for dette i rapporten.</li>
+                <li><strong>Eksamensarkitektur:</strong> Browser → Express API → SQL-database. Express er mellemleddet.
+                </li>
+            </ul>
+        </div>
 
-    <!-- KODE-SNUTTERE -->
-    <details>
-      <summary>📐 Kode-snuttere</summary>
-      <div class="formula-box">
-        <p><strong>Minimal Express-server (index.js)</strong></p>
-        <pre><span class="kw">const</span> express = require(<span class="str">'express'</span>);
+        <!-- KODE-SNUTTERE -->
+        <details>
+            <summary>📐 Kode-snuttere</summary>
+            <div class="formula-box">
+                <p><strong>Minimal Express-server (index.js)</strong></p>
+                <pre><span class="kw">const</span> express = require(<span class="str">'express'</span>);
 <span class="kw">const</span> app = express();
 app.use(express.json()); <span class="cm">// parse JSON body</span>
 
@@ -217,8 +328,8 @@ app.<span class="fn">delete</span>(<span class="str">'/todos/:id'</span>, (req, 
 
 app.listen(3000, () => console.log(<span class="str">'Kører på port 3000'</span>));</pre>
 
-        <p style="margin-top:14px"><strong>HTTP Status Codes</strong></p>
-        <pre><span class="cm">// Succes</span>
+                <p style="margin-top:14px"><strong>HTTP Status Codes</strong></p>
+                <pre><span class="cm">// Succes</span>
 200 OK       → Request lykkedes
 201 Created  → Ny ressource oprettet
 
@@ -227,166 +338,185 @@ app.listen(3000, () => console.log(<span class="str">'Kører på port 3000'</spa
 404 Not Found    → Ressourcen eksisterer ikke
 500 Server Error → Noget gik galt på serveren</pre>
 
-        <p style="margin-top:14px"><strong>Projektopsætning</strong></p>
-        <pre>mkdir mit-projekt && cd mit-projekt
+                <p style="margin-top:14px"><strong>Projektopsætning</strong></p>
+                <pre>mkdir mit-projekt && cd mit-projekt
 npm init -y
 npm install express
 <span class="cm"># Tilføj i package.json: "start": "node index.js"</span>
 npm start</pre>
-      </div>
-    </details>
+            </div>
+        </details>
 
-    <!-- UDDYBNING -->
-    <h2>📖 Uddybning</h2>
+        <!-- UDDYBNING -->
+        <h2>📖 Uddybning</h2>
 
-    <details class="uddybning-item">
-      <summary>Client-server arkitektur</summary>
-      <div class="content">
-        <p>Serveren er en enhed der deler ressourcer via et netværk. Klienten benytter disse ressourcer — det kan være en browser, en app eller et andet program.</p>
-        <p>Arkitekturen er typisk centraliseret: én server betjener mange klienter via HTTP — klienten sender en request, serveren svarer med et response. Én request giver præcis ét svar.</p>
-        <p>I eksamensopgaven: <strong>Browser → Express API → SQL-database</strong>. Browseren kender kun API-endpointene, ikke databasens indre.</p>
-      </div>
-    </details>
+        <details class="uddybning-item">
+            <summary>Client-server arkitektur</summary>
+            <div class="content">
+                <p>Serveren er en enhed der deler ressourcer via et netværk. Klienten benytter disse ressourcer — det
+                    kan være en browser, en app eller et andet program.</p>
+                <p>Arkitekturen er typisk centraliseret: én server betjener mange klienter via HTTP — klienten sender en
+                    request, serveren svarer med et response. Én request giver præcis ét svar.</p>
+                <p>I eksamensopgaven: <strong>Browser → Express API → SQL-database</strong>. Browseren kender kun
+                    API-endpointene, ikke databasens indre.</p>
+            </div>
+        </details>
 
-    <details class="uddybning-item">
-      <summary>Hvad er et API — og hvorfor bruger vi det?</summary>
-      <div class="content">
-        <p>API er en mellemmand der lader programmer tilgå hinandens data kontrolleret, uden at kende den interne implementering. Tænk på det som en restaurantmenu: du bestiller (request), køkkenet laver maden (logik du ikke ser), du får svaret (response).</p>
-        <ul>
-          <li><strong>Beskytter databasen</strong> — ingen direkte adgang udefra</li>
-          <li><strong>Adgangskontrol</strong> — kontrol over hvem der kan se hvad</li>
-          <li><strong>Separation of concerns</strong> — frontend, API og database er adskilte lag</li>
-          <li><strong>Mindsker domæneviden</strong> — brugeren behøver ikke kende systemets indre</li>
-        </ul>
-      </div>
-    </details>
+        <details class="uddybning-item">
+            <summary>Hvad er et API — og hvorfor bruger vi det?</summary>
+            <div class="content">
+                <p>API er en mellemmand der lader programmer tilgå hinandens data kontrolleret, uden at kende den
+                    interne implementering. Tænk på det som en restaurantmenu: du bestiller (request), køkkenet laver
+                    maden (logik du ikke ser), du får svaret (response).</p>
+                <ul>
+                    <li><strong>Beskytter databasen</strong> — ingen direkte adgang udefra</li>
+                    <li><strong>Adgangskontrol</strong> — kontrol over hvem der kan se hvad</li>
+                    <li><strong>Separation of concerns</strong> — frontend, API og database er adskilte lag</li>
+                    <li><strong>Mindsker domæneviden</strong> — brugeren behøver ikke kende systemets indre</li>
+                </ul>
+            </div>
+        </details>
 
-    <details class="uddybning-item">
-      <summary>Express.js opsætning trin for trin</summary>
-      <div class="content">
-        <ul>
-          <li>Lav en projektmappe og kør <code>npm init -y</code> — skaber <code>package.json</code></li>
-          <li>Installer Express: <code>npm install express</code></li>
-          <li>Lav <code>index.js</code> med din server-kode</li>
-          <li>Tilføj <code>"start": "node index.js"</code> under scripts i package.json</li>
-          <li>Start med <code>npm start</code> og gå til <code>localhost:3000</code></li>
-        </ul>
-        <p>Middleware <code>express.json()</code> er afgørende — uden det kan du ikke læse JSON-data fra POST/PUT request bodies.</p>
-      </div>
-    </details>
+        <details class="uddybning-item">
+            <summary>Express.js opsætning trin for trin</summary>
+            <div class="content">
+                <ul>
+                    <li>Lav en projektmappe og kør <code>npm init -y</code> — skaber <code>package.json</code></li>
+                    <li>Installer Express: <code>npm install express</code></li>
+                    <li>Lav <code>index.js</code> med din server-kode</li>
+                    <li>Tilføj <code>"start": "node index.js"</code> under scripts i package.json</li>
+                    <li>Start med <code>npm start</code> og gå til <code>localhost:3000</code></li>
+                </ul>
+                <p>Middleware <code>express.json()</code> er afgørende — uden det kan du ikke læse JSON-data fra
+                    POST/PUT request bodies.</p>
+            </div>
+        </details>
 
-    <details class="uddybning-item">
-      <summary>Test af endpoints — browser vs Postman vs IDE</summary>
-      <div class="content">
-        <p>GET-endpoints kan testes direkte i browseren. Men <strong>POST, PUT og DELETE kan ikke testes i browseren</strong> — brug Postman eller REST Client i VS Code.</p>
-        <p><strong>Postman:</strong> Vælg metode, skriv URL, tilføj JSON-body og send. Svaret vises med statuskode og body.</p>
-        <p><strong>VS Code REST Client:</strong> Skriv <code>.http</code>-filer direkte i editoren og kør dem derfra. Praktisk til at gemme test-cases sammen med koden.</p>
-      </div>
-    </details>
+        <details class="uddybning-item">
+            <summary>Test af endpoints — browser vs Postman vs IDE</summary>
+            <div class="content">
+                <p>GET-endpoints kan testes direkte i browseren. Men <strong>POST, PUT og DELETE kan ikke testes i
+                        browseren</strong> — brug Postman eller REST Client i VS Code.</p>
+                <p><strong>Postman:</strong> Vælg metode, skriv URL, tilføj JSON-body og send. Svaret vises med
+                    statuskode og body.</p>
+                <p><strong>VS Code REST Client:</strong> Skriv <code>.http</code>-filer direkte i editoren og kør dem
+                    derfra. Praktisk til at gemme test-cases sammen med koden.</p>
+            </div>
+        </details>
 
-    <!-- QUIZ -->
-    <h2>🧠 Quiz</h2>
-    <p class="score-display" id="score-display">Score: 0 / 10</p>
+        <!-- QUIZ -->
+        <h2>🧠 Quiz</h2>
+        <p class="score-display" id="score-display">Score: 0 / 10</p>
 
-    <div class="quiz-question" id="q1">
-      <p>1. Hvilken HTTP-metode bruger du til at OPRETTE en ny ressource?</p>
-      <button class="quiz-btn" onclick="answer(this,'q1',false)">GET</button>
-      <button class="quiz-btn" onclick="answer(this,'q1',false)">PUT</button>
-      <button class="quiz-btn" onclick="answer(this,'q1',true)">POST</button>
-      <button class="quiz-btn" onclick="answer(this,'q1',false)">DELETE</button>
-    </div>
+        <div class="quiz-question" id="q1">
+            <p>1. Hvilken HTTP-metode bruger du til at OPRETTE en ny ressource?</p>
+            <button class="quiz-btn" onclick="answer(this,'q1',false)">GET</button>
+            <button class="quiz-btn" onclick="answer(this,'q1',false)">PUT</button>
+            <button class="quiz-btn" onclick="answer(this,'q1',true)">POST</button>
+            <button class="quiz-btn" onclick="answer(this,'q1',false)">DELETE</button>
+        </div>
 
-    <div class="quiz-question" id="q2">
-      <p>2. Hvilken statuskode returnerer serveren når en ny ressource er oprettet korrekt?</p>
-      <button class="quiz-btn" onclick="answer(this,'q2',false)">200 OK</button>
-      <button class="quiz-btn" onclick="answer(this,'q2',true)">201 Created</button>
-      <button class="quiz-btn" onclick="answer(this,'q2',false)">404 Not Found</button>
-      <button class="quiz-btn" onclick="answer(this,'q2',false)">500 Server Error</button>
-    </div>
+        <div class="quiz-question" id="q2">
+            <p>2. Hvilken statuskode returnerer serveren når en ny ressource er oprettet korrekt?</p>
+            <button class="quiz-btn" onclick="answer(this,'q2',false)">200 OK</button>
+            <button class="quiz-btn" onclick="answer(this,'q2',true)">201 Created</button>
+            <button class="quiz-btn" onclick="answer(this,'q2',false)">404 Not Found</button>
+            <button class="quiz-btn" onclick="answer(this,'q2',false)">500 Server Error</button>
+        </div>
 
-    <div class="quiz-question" id="q3">
-      <p>3. Hvad skal du installere for at bruge Express i dit Node.js projekt?</p>
-      <button class="quiz-btn" onclick="answer(this,'q3',false)">npm init express</button>
-      <button class="quiz-btn" onclick="answer(this,'q3',true)">npm install express</button>
-      <button class="quiz-btn" onclick="answer(this,'q3',false)">node install express</button>
-      <button class="quiz-btn" onclick="answer(this,'q3',false)">require express</button>
-    </div>
+        <div class="quiz-question" id="q3">
+            <p>3. Hvad skal du installere for at bruge Express i dit Node.js projekt?</p>
+            <button class="quiz-btn" onclick="answer(this,'q3',false)">npm init express</button>
+            <button class="quiz-btn" onclick="answer(this,'q3',true)">npm install express</button>
+            <button class="quiz-btn" onclick="answer(this,'q3',false)">node install express</button>
+            <button class="quiz-btn" onclick="answer(this,'q3',false)">require express</button>
+        </div>
 
-    <div class="quiz-question" id="q4">
-      <p>4. Hvilken middleware skal du tilføje for at Express kan læse JSON fra request body?</p>
-      <button class="quiz-btn" onclick="answer(this,'q4',false)">app.use(express.html())</button>
-      <button class="quiz-btn" onclick="answer(this,'q4',true)">app.use(express.json())</button>
-      <button class="quiz-btn" onclick="answer(this,'q4',false)">app.parse(JSON)</button>
-      <button class="quiz-btn" onclick="answer(this,'q4',false)">app.use(bodyParser)</button>
-    </div>
+        <div class="quiz-question" id="q4">
+            <p>4. Hvilken middleware skal du tilføje for at Express kan læse JSON fra request body?</p>
+            <button class="quiz-btn" onclick="answer(this,'q4',false)">app.use(express.html())</button>
+            <button class="quiz-btn" onclick="answer(this,'q4',true)">app.use(express.json())</button>
+            <button class="quiz-btn" onclick="answer(this,'q4',false)">app.parse(JSON)</button>
+            <button class="quiz-btn" onclick="answer(this,'q4',false)">app.use(bodyParser)</button>
+        </div>
 
-    <div class="quiz-question" id="q5">
-      <p>5. Du laver GET /todos/99, men todo med id 99 eksisterer ikke. Hvilken statuskode bør serveren returnere?</p>
-      <button class="quiz-btn" onclick="answer(this,'q5',false)">200 OK</button>
-      <button class="quiz-btn" onclick="answer(this,'q5',false)">201 Created</button>
-      <button class="quiz-btn" onclick="answer(this,'q5',false)">400 Bad Request</button>
-      <button class="quiz-btn" onclick="answer(this,'q5',true)">404 Not Found</button>
-    </div>
+        <div class="quiz-question" id="q5">
+            <p>5. Du laver GET /todos/99, men todo med id 99 eksisterer ikke. Hvilken statuskode bør serveren returnere?
+            </p>
+            <button class="quiz-btn" onclick="answer(this,'q5',false)">200 OK</button>
+            <button class="quiz-btn" onclick="answer(this,'q5',false)">201 Created</button>
+            <button class="quiz-btn" onclick="answer(this,'q5',false)">400 Bad Request</button>
+            <button class="quiz-btn" onclick="answer(this,'q5',true)">404 Not Found</button>
+        </div>
 
-    <div class="quiz-question" id="q6">
-      <p>6. Hvorfor bruger vi et API foran vores database?</p>
-      <button class="quiz-btn" onclick="answer(this,'q6',false)">For at gøre koden hurtigere</button>
-      <button class="quiz-btn" onclick="answer(this,'q6',true)">For at beskytte databasen og kontrollere adgang</button>
-      <button class="quiz-btn" onclick="answer(this,'q6',false)">Fordi Express kræver det</button>
-      <button class="quiz-btn" onclick="answer(this,'q6',false)">For at undgå at bruge SQL</button>
-    </div>
+        <div class="quiz-question" id="q6">
+            <p>6. Hvorfor bruger vi et API foran vores database?</p>
+            <button class="quiz-btn" onclick="answer(this,'q6',false)">For at gøre koden hurtigere</button>
+            <button class="quiz-btn" onclick="answer(this,'q6',true)">For at beskytte databasen og kontrollere
+                adgang</button>
+            <button class="quiz-btn" onclick="answer(this,'q6',false)">Fordi Express kræver det</button>
+            <button class="quiz-btn" onclick="answer(this,'q6',false)">For at undgå at bruge SQL</button>
+        </div>
 
-    <div class="quiz-question" id="q7">
-      <p>7. Hvad er forskellen på en statisk og en dynamisk hjemmeside i Express?</p>
-      <button class="quiz-btn" onclick="answer(this,'q7',false)">En statisk bruger HTML, en dynamisk bruger CSS</button>
-      <button class="quiz-btn" onclick="answer(this,'q7',true)">En statisk returnerer samme svar altid, en dynamisk tilpasser svaret baseret på input</button>
-      <button class="quiz-btn" onclick="answer(this,'q7',false)">En dynamisk kræver database, en statisk ikke</button>
-      <button class="quiz-btn" onclick="answer(this,'q7',false)">Der er ingen forskel</button>
-    </div>
+        <div class="quiz-question" id="q7">
+            <p>7. Hvad er forskellen på en statisk og en dynamisk hjemmeside i Express?</p>
+            <button class="quiz-btn" onclick="answer(this,'q7',false)">En statisk bruger HTML, en dynamisk bruger
+                CSS</button>
+            <button class="quiz-btn" onclick="answer(this,'q7',true)">En statisk returnerer samme svar altid, en
+                dynamisk tilpasser svaret baseret på input</button>
+            <button class="quiz-btn" onclick="answer(this,'q7',false)">En dynamisk kræver database, en statisk
+                ikke</button>
+            <button class="quiz-btn" onclick="answer(this,'q7',false)">Der er ingen forskel</button>
+        </div>
 
-    <div class="quiz-question" id="q8">
-      <p>8. Hvilken port lytter din Express-server typisk på lokalt?</p>
-      <button class="quiz-btn" onclick="answer(this,'q8',false)">80</button>
-      <button class="quiz-btn" onclick="answer(this,'q8',false)">443</button>
-      <button class="quiz-btn" onclick="answer(this,'q8',true)">3000</button>
-      <button class="quiz-btn" onclick="answer(this,'q8',false)">8080</button>
-    </div>
+        <div class="quiz-question" id="q8">
+            <p>8. Hvilken port lytter din Express-server typisk på lokalt?</p>
+            <button class="quiz-btn" onclick="answer(this,'q8',false)">80</button>
+            <button class="quiz-btn" onclick="answer(this,'q8',false)">443</button>
+            <button class="quiz-btn" onclick="answer(this,'q8',true)">3000</button>
+            <button class="quiz-btn" onclick="answer(this,'q8',false)">8080</button>
+        </div>
 
-    <div class="quiz-question" id="q9">
-      <p>9. Du vil teste et DELETE endpoint. Kan du gøre det direkte i browseren?</p>
-      <button class="quiz-btn" onclick="answer(this,'q9',false)">Ja, ved at skrive URL'en i adresselinjen</button>
-      <button class="quiz-btn" onclick="answer(this,'q9',true)">Nej — browseren kan kun lave GET requests fra adresselinjen</button>
-      <button class="quiz-btn" onclick="answer(this,'q9',false)">Ja, ved at højreklikke på siden</button>
-      <button class="quiz-btn" onclick="answer(this,'q9',false)">Nej, DELETE kræver altid HTTPS</button>
-    </div>
+        <div class="quiz-question" id="q9">
+            <p>9. Du vil teste et DELETE endpoint. Kan du gøre det direkte i browseren?</p>
+            <button class="quiz-btn" onclick="answer(this,'q9',false)">Ja, ved at skrive URL'en i adresselinjen</button>
+            <button class="quiz-btn" onclick="answer(this,'q9',true)">Nej — browseren kan kun lave GET requests fra
+                adresselinjen</button>
+            <button class="quiz-btn" onclick="answer(this,'q9',false)">Ja, ved at højreklikke på siden</button>
+            <button class="quiz-btn" onclick="answer(this,'q9',false)">Nej, DELETE kræver altid HTTPS</button>
+        </div>
 
-    <div class="quiz-question" id="q10">
-      <p>10. I eksamensopgaven — hvad er Express-serverens rolle?</p>
-      <button class="quiz-btn" onclick="answer(this,'q10',false)">Den viser HTML-sider til brugeren</button>
-      <button class="quiz-btn" onclick="answer(this,'q10',false)">Den lagrer data i JSON-filer</button>
-      <button class="quiz-btn" onclick="answer(this,'q10',true)">Den er mellemleddet (backend) mellem HTML-frontend og SQL-databasen</button>
-      <button class="quiz-btn" onclick="answer(this,'q10',false)">Den erstatter databasen</button>
-    </div>
+        <div class="quiz-question" id="q10">
+            <p>10. I eksamensopgaven — hvad er Express-serverens rolle?</p>
+            <button class="quiz-btn" onclick="answer(this,'q10',false)">Den viser HTML-sider til brugeren</button>
+            <button class="quiz-btn" onclick="answer(this,'q10',false)">Den lagrer data i JSON-filer</button>
+            <button class="quiz-btn" onclick="answer(this,'q10',true)">Den er mellemleddet (backend) mellem
+                HTML-frontend og SQL-databasen</button>
+            <button class="quiz-btn" onclick="answer(this,'q10',false)">Den erstatter databasen</button>
+        </div>
 
-    <button class="restart-btn" onclick="restartQuiz()">↺ Start forfra</button>
+        <button class="restart-btn" onclick="restartQuiz()">↺ Start forfra</button>
 
-    <!-- ØVELSER -->
-    <h2>💻 Øvelse: Byg Todo-API'et</h2>
+        <!-- ØVELSER -->
+        <h2>💻 Øvelse: Byg Todo-API'et</h2>
 
-    <div class="step">
-      <div class="step-num">Trin 1 — Sæt projektet op</div>
-      <p>Lav en ny mappe, kør <code>npm init -y</code> og installer Express.</p>
-      <button class="hint-btn" onclick="toggleHint(this)">💡 Vis hint</button>
-      <div class="hint-text"><pre>mkdir todo-api && cd todo-api
+        <div class="step">
+            <div class="step-num">Trin 1 — Sæt projektet op</div>
+            <p>Lav en ny mappe, kør <code>npm init -y</code> og installer Express.</p>
+            <button class="hint-btn" onclick="toggleHint(this)">💡 Vis hint</button>
+            <div class="hint-text">
+                <pre>mkdir todo-api && cd todo-api
 npm init -y
-npm install express</pre>Tilføj <code>"start": "node index.js"</code> i package.json under scripts.</div>
-    </div>
+npm install express</pre>Tilføj <code>"start": "node index.js"</code> i package.json under scripts.
+            </div>
+        </div>
 
-    <div class="step">
-      <div class="step-num">Trin 2 — Sæt serveren op</div>
-      <p>Opret <code>index.js</code>. Serveren skal svare på <code>GET /</code> og lytte på port 3000.</p>
-      <button class="hint-btn" onclick="toggleHint(this)">💡 Vis hint</button>
-      <div class="hint-text"><pre>const express = require('express');
+        <div class="step">
+            <div class="step-num">Trin 2 — Sæt serveren op</div>
+            <p>Opret <code>index.js</code>. Serveren skal svare på <code>GET /</code> og lytte på port 3000.</p>
+            <button class="hint-btn" onclick="toggleHint(this)">💡 Vis hint</button>
+            <div class="hint-text">
+                <pre>const express = require('express');
 const app = express();
 app.use(express.json());
 
@@ -394,14 +524,17 @@ app.get('/', (req, res) => {
   res.send('Server kører!');
 });
 
-app.listen(3000, () => console.log('Kører på port 3000'));</pre></div>
-    </div>
+app.listen(3000, () => console.log('Kører på port 3000'));</pre>
+            </div>
+        </div>
 
-    <div class="step">
-      <div class="step-num">Trin 3 — GET endpoints</div>
-      <p>Tilføj <code>GET /todos</code> og <code>GET /todos/:id</code>. Lav et lille array med 2-3 todos øverst.</p>
-      <button class="hint-btn" onclick="toggleHint(this)">💡 Vis hint</button>
-      <div class="hint-text"><pre>let todos = [
+        <div class="step">
+            <div class="step-num">Trin 3 — GET endpoints</div>
+            <p>Tilføj <code>GET /todos</code> og <code>GET /todos/:id</code>. Lav et lille array med 2-3 todos øverst.
+            </p>
+            <button class="hint-btn" onclick="toggleHint(this)">💡 Vis hint</button>
+            <div class="hint-text">
+                <pre>let todos = [
   { id: 1, task: 'Lær Express', done: false },
   { id: 2, task: 'Byg API', done: false }
 ];
@@ -412,25 +545,29 @@ app.get('/todos/:id', (req, res) => {
   const todo = todos.find(t => t.id == req.params.id);
   if (!todo) return res.status(404).json({ error: 'Ikke fundet' });
   res.json(todo);
-});</pre></div>
-    </div>
+});</pre>
+            </div>
+        </div>
 
-    <div class="step">
-      <div class="step-num">Trin 4 — POST endpoint</div>
-      <p>Tilføj <code>POST /todos</code> der modtager en ny todo og svarer med 201.</p>
-      <button class="hint-btn" onclick="toggleHint(this)">💡 Vis hint</button>
-      <div class="hint-text"><pre>app.post('/todos', (req, res) => {
+        <div class="step">
+            <div class="step-num">Trin 4 — POST endpoint</div>
+            <p>Tilføj <code>POST /todos</code> der modtager en ny todo og svarer med 201.</p>
+            <button class="hint-btn" onclick="toggleHint(this)">💡 Vis hint</button>
+            <div class="hint-text">
+                <pre>app.post('/todos', (req, res) => {
   const nyTodo = { id: todos.length + 1, ...req.body };
   todos.push(nyTodo);
   res.status(201).json(nyTodo);
-});</pre>Test med Postman: POST til <code>localhost:3000/todos</code>, body: <code>{"task":"Test","done":false}</code></div>
-    </div>
+});</pre>Test med Postman: POST til <code>localhost:3000/todos</code>, body: <code>{"task":"Test","done":false}</code>
+            </div>
+        </div>
 
-    <div class="step">
-      <div class="step-num">Trin 5 — PUT og DELETE</div>
-      <p>Tilføj de to sidste endpoints.</p>
-      <button class="hint-btn" onclick="toggleHint(this)">💡 Vis hint</button>
-      <div class="hint-text"><pre>app.put('/todos/:id', (req, res) => {
+        <div class="step">
+            <div class="step-num">Trin 5 — PUT og DELETE</div>
+            <p>Tilføj de to sidste endpoints.</p>
+            <button class="hint-btn" onclick="toggleHint(this)">💡 Vis hint</button>
+            <div class="hint-text">
+                <pre>app.put('/todos/:id', (req, res) => {
   const idx = todos.findIndex(t => t.id == req.params.id);
   if (idx === -1) return res.status(404).json({ error: 'Ikke fundet' });
   todos[idx] = { ...todos[idx], ...req.body };
@@ -440,88 +577,91 @@ app.get('/todos/:id', (req, res) => {
 app.delete('/todos/:id', (req, res) => {
   todos = todos.filter(t => t.id != req.params.id);
   res.json({ message: 'Slettet' });
-});</pre></div>
+});</pre>
+            </div>
+        </div>
+
+        <div class="bonus-box">
+            <strong>🏆 Bonus:</strong> Tilføj fejlhåndtering — hvad sker der hvis body er tomt ved POST? Returnér
+            meningsfulde fejlbeskeder med korrekte statuskoder.
+        </div>
+
+        <!-- MINE NOTER -->
+        <h2>📝 Mine noter</h2>
+        <textarea placeholder="Skriv dine egne noter her…"></textarea>
+
+        <!-- KILDER -->
+        <h2>📚 Kilder og pensum</h2>
+        <ul class="sources">
+            <li>Forelæsning 18: Webserver og API'er — Stefan, CBS HA(it), 2026</li>
+            <li>MDN Web Docs: HTTP Status Codes</li>
+            <li>Eksamensopgaven 2026 (rev. 6.5) — krav til Server/API med Node.js + Express</li>
+        </ul>
+
+        <nav class="note-nav" style="margin-top:3rem">
+            <a href="#" class="disabled">← Lektion 17</a>
+            <a href="/">🏠 Oversigt</a>
+            <a href="#" class="disabled">Lektion 19 →</a>
+        </nav>
+
     </div>
 
-    <div class="bonus-box">
-      <strong>🏆 Bonus:</strong> Tilføj fejlhåndtering — hvad sker der hvis body er tomt ved POST? Returnér meningsfulde fejlbeskeder med korrekte statuskoder.
-    </div>
+    <footer>
+        Pensummit &mdash; HA(it), CBS · <span id="year"></span>
+    </footer>
 
-    <!-- MINE NOTER -->
-    <h2>📝 Mine noter</h2>
-    <textarea placeholder="Skriv dine egne noter her…"></textarea>
-
-    <!-- KILDER -->
-    <h2>📚 Kilder og pensum</h2>
-    <ul class="sources">
-      <li>Forelæsning 18: Webserver og API'er — Stefan, CBS HA(it), 2026</li>
-      <li>MDN Web Docs: HTTP Status Codes</li>
-      <li>Eksamensopgaven 2026 (rev. 6.5) — krav til Server/API med Node.js + Express</li>
-    </ul>
-
-    <nav class="note-nav" style="margin-top:3rem">
-      <a href="#" class="disabled">← Lektion 17</a>
-      <a href="/">🏠 Oversigt</a>
-      <a href="#" class="disabled">Lektion 19 →</a>
-    </nav>
-
-  </div>
-
-  <footer>
-    Pensummit &mdash; HA(it), CBS · <span id="year"></span>
-  </footer>
-
-  <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: 'neutral',
-      themeVariables: {
-        fontSize: '15px',
-        fontFamily: 'DM Sans, sans-serif',
-        primaryColor: '#f0e8e3',
-        primaryBorderColor: '#c8502a',
-        primaryTextColor: '#1a1814',
-        lineColor: '#c8502a',
-      }
-    });
-
-    // QUIZ
-    let score = 0;
-    const total = document.querySelectorAll('.quiz-question').length;
-
-    function answer(btn, qId, isCorrect) {
-      const q = document.getElementById(qId);
-      if (q.dataset.done) return;
-      q.dataset.done = '1';
-      q.querySelectorAll('.quiz-btn').forEach(b => {
-        b.disabled = true;
-        if (b.onclick.toString().includes('true')) b.classList.add('correct');
-      });
-      if (!isCorrect) btn.classList.add('wrong');
-      else score++;
-      document.getElementById('score-display').textContent = `Score: ${score} / ${total}`;
-    }
-
-    function restartQuiz() {
-      score = 0;
-      document.querySelectorAll('.quiz-question').forEach(q => {
-        delete q.dataset.done;
-        q.querySelectorAll('.quiz-btn').forEach(b => {
-          b.disabled = false;
-          b.classList.remove('correct','wrong');
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'neutral',
+            themeVariables: {
+                fontSize: '15px',
+                fontFamily: 'DM Sans, sans-serif',
+                primaryColor: '#f0e8e3',
+                primaryBorderColor: '#c8502a',
+                primaryTextColor: '#1a1814',
+                lineColor: '#c8502a',
+            }
         });
-      });
-      document.getElementById('score-display').textContent = `Score: 0 / ${total}`;
-    }
 
-    function toggleHint(btn) {
-      const hint = btn.nextElementSibling;
-      hint.classList.toggle('visible');
-      btn.textContent = hint.classList.contains('visible') ? '🙈 Skjul hint' : '💡 Vis hint';
-    }
+        // QUIZ
+        let score = 0;
+        const total = document.querySelectorAll('.quiz-question').length;
 
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+        function answer(btn, qId, isCorrect) {
+            const q = document.getElementById(qId);
+            if (q.dataset.done) return;
+            q.dataset.done = '1';
+            q.querySelectorAll('.quiz-btn').forEach(b => {
+                b.disabled = true;
+                if (b.onclick.toString().includes('true')) b.classList.add('correct');
+            });
+            if (!isCorrect) btn.classList.add('wrong');
+            else score++;
+            document.getElementById('score-display').textContent = `Score: ${score} / ${total}`;
+        }
+
+        function restartQuiz() {
+            score = 0;
+            document.querySelectorAll('.quiz-question').forEach(q => {
+                delete q.dataset.done;
+                q.querySelectorAll('.quiz-btn').forEach(b => {
+                    b.disabled = false;
+                    b.classList.remove('correct', 'wrong');
+                });
+            });
+            document.getElementById('score-display').textContent = `Score: 0 / ${total}`;
+        }
+
+        function toggleHint(btn) {
+            const hint = btn.nextElementSibling;
+            hint.classList.toggle('visible');
+            btn.textContent = hint.classList.contains('visible') ? '🙈 Skjul hint' : '💡 Vis hint';
+        }
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
 
 </body>
+
 </html>
