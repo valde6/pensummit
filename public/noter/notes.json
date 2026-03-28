@@ -1,49 +1,22 @@
 [
-    {
-        "id": "projektmodeller",
-        "title": "Projektmodeller",
-        "subject": "it-projektledelse",
-        "tags": [
-            "vandfald",
-            "agil",
-            "scrum"
-        ],
-        "date": "2026-03-26",
-        "path": "/noter/it-projektledelse/projektmodeller.html",
-        "excerpt": "Overblik over klassiske og agile projektmodeller."
-    },
-    {
-        "id": "regnskabsanalyse",
-        "title": "Regnskabsanalyse",
-        "subject": "oekonomi",
-        "tags": [
-            "nøgletal",
-            "rentabilitet"
-        ],
-        "date": "2026-03-25",
-        "path": "/noter/oekonomi/regnskabsanalyse.html",
-        "excerpt": "De vigtigste nøgletal og hvordan de bruges."
-    },
-    {
-        "id": "organisationsteori",
-        "title": "Organisationsteori",
-        "subject": "organisation",
-        "tags": [
-            "mintzberg",
-            "struktur"
-        ],
-        "date": "2026-03-20",
-        "path": "/noter/organisation/organisationsteori.html",
-        "excerpt": "Grundlæggende organisationsformer og ledelsesstruktur."
-    },
-    {
-  "id": "programmering-L18-webserver-api",
-  "title": "Webserver og API'er",
-  "subject": "programmering",
-  "lektion": "L18",
-  "tags": ["HTTP", "REST API", "Express.js", "Node.js", "CRUD"],
-  "date": "2026-03-23",
-  "path": "/noter/programmering/programmering-L18-2026-03-23-webserver-api.html",
-  "excerpt": "HTTP, Express.js og CRUD-operationer — backend-laget til eksamensopgaven."
-}
+  {
+    "id": "it-projektledelse-L01-intro",
+    "title": "Introduktion til IT-projektledelse",
+    "subject": "it-projektledelse",
+    "lektion": "L01",
+    "tags": ["projektledelse", "intro"],
+    "date": "2026-02-03",
+    "path": "/noter/it-projektledelse/it-projektledelse-L01-2026-02-03-intro.html",
+    "excerpt": "Introduktion til faget IT-projektledelse."
+  },
+  {
+    "id": "programmering-L18-webserver-api",
+    "title": "Webserver og API'er",
+    "subject": "programmering",
+    "lektion": "L18",
+    "tags": ["HTTP", "REST API", "Express.js", "Node.js", "CRUD"],
+    "date": "2026-03-23",
+    "path": "/noter/programmering/programmering-L18-2026-03-23-webserver-api.html",
+    "excerpt": "HTTP, Express.js og CRUD-operationer — backend-laget til eksamensopgaven."
+  }
 ]

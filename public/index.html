@@ -50,71 +50,67 @@
   <!-- FAG-GRID -->
   <main class="fag-grid" id="fag-grid">
 
-    <!-- IT-PROJEKTLEDELSE -->
     <div class="fag-kort fag-it open" id="it-projektledelse" data-fag="it-projektledelse">
       <div class="fag-header" onclick="toggleFag(this)">
         <div class="fag-header-left">
           <div class="fag-ikon">🗂️</div>
           <div>
             <div class="fag-titel">IT-Projektledelse</div>
-            <div class="fag-meta" id="meta-it">0 noter</div>
+            <div class="fag-meta" id="meta-it-projektledelse">Indlæser…</div>
           </div>
         </div>
         <span class="fag-toggle">▾</span>
       </div>
-      <div class="fag-noter-liste" id="liste-it">
-        <div class="note-tom">Ingen noter endnu — upload materiale for at komme i gang.</div>
+      <div class="fag-noter-liste" id="liste-it-projektledelse">
+        <div class="note-tom">Indlæser noter…</div>
       </div>
     </div>
 
-    <!-- PROGRAMMERING -->
     <div class="fag-kort fag-prog" id="programmering" data-fag="programmering">
       <div class="fag-header" onclick="toggleFag(this)">
         <div class="fag-header-left">
           <div class="fag-ikon">💻</div>
           <div>
             <div class="fag-titel">Programmering & Databaser</div>
-            <div class="fag-meta" id="meta-prog">0 noter</div>
+            <div class="fag-meta" id="meta-programmering">Indlæser…</div>
           </div>
         </div>
         <span class="fag-toggle">▾</span>
       </div>
-      <div class="fag-noter-liste" id="liste-prog">
-        <div class="note-tom">Ingen noter endnu — upload materiale for at komme i gang.</div>
+      <div class="fag-noter-liste" id="liste-programmering">
+        <div class="note-tom">Indlæser noter…</div>
       </div>
     </div>
 
-    <!-- ORGANISATION -->
     <div class="fag-kort fag-org" id="organisation" data-fag="organisation">
       <div class="fag-header" onclick="toggleFag(this)">
         <div class="fag-header-left">
           <div class="fag-ikon">🏢</div>
           <div>
             <div class="fag-titel">Organisationslære</div>
-            <div class="fag-meta" id="meta-org">0 noter</div>
+            <div class="fag-meta" id="meta-organisation">Indlæser…</div>
           </div>
         </div>
         <span class="fag-toggle">▾</span>
       </div>
-      <div class="fag-noter-liste" id="liste-org">
-        <div class="note-tom">Ingen noter endnu — upload materiale for at komme i gang.</div>
+      <div class="fag-noter-liste" id="liste-organisation">
+        <div class="note-tom">Indlæser noter…</div>
       </div>
     </div>
 
-    <!-- ØKONOMI -->
     <div class="fag-kort fag-eco" id="oekonomi" data-fag="oekonomi">
       <div class="fag-header" onclick="toggleFag(this)">
         <div class="fag-header-left">
           <div class="fag-ikon">📊</div>
           <div>
             <div class="fag-titel">Virksomhedens Økonomiske Styring</div>
-            <div class="fag-meta" id="meta-eco">0 noter</div>
+            <div class="fag-meta" id="meta-oekonomi">Indlæser…</div>
           </div>
         </div>
         <span class="fag-toggle">▾</span>
       </div>
-      <div class="fag-noter-liste" id="liste-eco">
-        <div class="note-tom">Ingen noter endnu — upload materiale for at komme i gang.</div>
+      <div class="fag-noter-liste" id="liste-oekonomi">
+        <div class="note-tom">Indlæser noter…</div>
       </div>
     </div>
 
@@ -127,145 +123,101 @@
   </footer>
 
   <script>
-    // ── NOTER DATA ──
-    // Tilføj noter her som objekter: { lektion, titel, dato, fil }
-    // fil = stien relativt til /public/noter/[fag]/
-    const noter = {
-      it: [
-        {
-          lektion: 'L01',
-          titel: 'Introduktion til IT-projektledelse',
-          dato: '2026-02-03',
-          fil: 'noter/it-projektledelse/it-projektledelse-L01-2026-02-03-intro.html'
-        },
-        {
-          lektion: 'L02',
-          titel: 'Scope og interessenter',
-          dato: '2026-02-10',
-          fil: 'noter/it-projektledelse/it-projektledelse-L02-2026-02-10-scope.html'
-        }
-      ],
-      prog: [
-        {
-          lektion: 'L01',
-          titel: 'HTML struktur',
-          dato: '2026-02-05',
-          fil: 'noter/programmering/programmering-L01-2026-02-05-html.html'
-        }
-      ],
-      org: [
-        {
-          lektion: 'L01',
-          titel: 'Organisationstyper',
-          dato: '2026-02-04',
-          fil: 'noter/organisation/organisation-L01-2026-02-04-typer.html'
-        }
-      ],
-      eco: [
-        {
-          lektion: 'L01',
-          titel: 'Regnskabets formål',
-          dato: '2026-02-06',
-          fil: 'noter/oekonomi/oekonomi-L01-2026-02-06-formaal.html'
-        }
-      ],
-    };
-
-    // ── BYGG LISTER ──
-    const fagMap = {
-      it: { liste: 'liste-it', meta: 'meta-it' },
-      prog: { liste: 'liste-prog', meta: 'meta-prog' },
-      org: { liste: 'liste-org', meta: 'meta-org' },
-      eco: { liste: 'liste-eco', meta: 'meta-eco' },
-    };
+    const fag = ['it-projektledelse', 'programmering', 'organisation', 'oekonomi'];
 
     function formatDato(dato) {
       const [y, m, d] = dato.split('-');
       return `${d}/${m}/${y}`;
     }
 
-    function byggListe(fag) {
-      const { liste, meta } = fagMap[fag];
-      const el = document.getElementById(liste);
-      const metaEl = document.getElementById(meta);
-      const items = noter[fag];
+    function byggListe(fagSlug, noter) {
+      const liste = document.getElementById(`liste-${fagSlug}`);
+      const meta  = document.getElementById(`meta-${fagSlug}`);
+      const items = noter.filter(n => n.subject === fagSlug)
+                         .sort((a, b) => a.date.localeCompare(b.date));
 
-      if (!items || items.length === 0) {
-        el.innerHTML = '<div class="note-tom">Ingen noter endnu — upload materiale for at komme i gang.</div>';
-        metaEl.textContent = '0 noter';
+      if (items.length === 0) {
+        liste.innerHTML = '<div class="note-tom">Ingen noter endnu — upload materiale for at komme i gang.</div>';
+        meta.textContent = '0 noter';
         return;
       }
 
-      metaEl.textContent = `${items.length} note${items.length !== 1 ? 'r' : ''}`;
-      el.innerHTML = items.map(n => `
-        <a class="note-item" href="/${n.fil}" data-titel="${n.titel.toLowerCase()}">
+      meta.textContent = `${items.length} note${items.length !== 1 ? 'r' : ''}`;
+      liste.innerHTML = items.map(n => `
+        <a class="note-item" href="${n.path}" data-titel="${n.title.toLowerCase()}">
           <div class="note-item-left">
             <span class="note-lektion">${n.lektion}</span>
-            <span class="note-titel">${n.titel}</span>
+            <span class="note-titel">${n.title}</span>
           </div>
           <div style="display:flex;align-items:center;gap:0.75rem">
-            <span class="note-dato">${formatDato(n.dato)}</span>
+            <span class="note-dato">${formatDato(n.date)}</span>
             <span class="note-arrow">→</span>
           </div>
         </a>
       `).join('');
     }
 
-    Object.keys(fagMap).forEach(byggListe);
+    // ── FETCH notes.json ──
+    fetch('/noter/notes.json')
+      .then(r => r.json())
+      .then(noter => {
+        fag.forEach(f => byggListe(f, noter));
+        initSearch();
+      })
+      .catch(() => {
+        fag.forEach(f => {
+          document.getElementById(`liste-${f}`).innerHTML =
+            '<div class="note-tom">Kunne ikke indlæse noter.</div>';
+          document.getElementById(`meta-${f}`).textContent = '—';
+        });
+      });
 
     // ── TOGGLE FAG ──
     function toggleFag(header) {
-      const kort = header.closest('.fag-kort');
-      kort.classList.toggle('open');
+      header.closest('.fag-kort').classList.toggle('open');
     }
 
-    // ── SØGNING ──
-    const searchInput = document.getElementById('search-input');
-    const searchCount = document.getElementById('search-count');
-    const ingenResultater = document.getElementById('ingen-resultater');
+    // ── SØGNING (initialiseres efter data er loaded) ──
+    function initSearch() {
+      const searchInput    = document.getElementById('search-input');
+      const searchCount    = document.getElementById('search-count');
+      const ingenResultater = document.getElementById('ingen-resultater');
 
-    searchInput.addEventListener('input', () => {
-      const q = searchInput.value.trim().toLowerCase();
+      searchInput.addEventListener('input', () => {
+        const q = searchInput.value.trim().toLowerCase();
 
-      if (!q) {
-        // Nulstil
-        document.querySelectorAll('.note-item').forEach(el => el.style.display = '');
-        document.querySelectorAll('.note-tom').forEach(el => el.style.display = '');
-        document.querySelectorAll('.fag-kort').forEach(el => el.classList.remove('open'));
-        searchCount.textContent = '';
-        ingenResultater.style.display = 'none';
-        return;
-      }
+        if (!q) {
+          document.querySelectorAll('.note-item').forEach(el => el.style.display = '');
+          document.querySelectorAll('.note-tom').forEach(el => el.style.display = '');
+          document.querySelectorAll('.fag-kort').forEach(el => el.classList.remove('open'));
+          searchCount.textContent = '';
+          ingenResultater.style.display = 'none';
+          return;
+        }
 
-      let hits = 0;
-      document.querySelectorAll('.fag-kort').forEach(kort => {
-        const items = kort.querySelectorAll('.note-item');
-        let fagHits = 0;
+        let hits = 0;
+        document.querySelectorAll('.fag-kort').forEach(kort => {
+          const items = kort.querySelectorAll('.note-item');
+          let fagHits = 0;
 
-        items.forEach(item => {
-          const match = item.dataset.titel.includes(q);
-          item.style.display = match ? '' : 'none';
-          if (match) { fagHits++; hits++; }
+          items.forEach(item => {
+            const match = item.dataset.titel.includes(q);
+            item.style.display = match ? '' : 'none';
+            if (match) { fagHits++; hits++; }
+          });
+
+          const tom = kort.querySelector('.note-tom');
+          if (tom) tom.style.display = 'none';
+          kort.classList.toggle('open', fagHits > 0);
         });
 
-        // Vis/skjul tom-besked og åbn kort ved hits
-        const tom = kort.querySelector('.note-tom');
-        if (tom) tom.style.display = 'none';
-        if (fagHits > 0) {
-          kort.classList.add('open');
-        } else {
-          kort.classList.remove('open');
-        }
+        searchCount.textContent = hits > 0 ? `${hits} resultat${hits !== 1 ? 'er' : ''}` : '';
+        ingenResultater.style.display = hits === 0 ? 'block' : 'none';
       });
+    }
 
-      searchCount.textContent = hits > 0 ? `${hits} resultat${hits !== 1 ? 'er' : ''}` : '';
-      ingenResultater.style.display = hits === 0 ? 'block' : 'none';
-    });
-
-    // ── ÅR I FOOTER ──
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 
 </body>
-
 </html>
