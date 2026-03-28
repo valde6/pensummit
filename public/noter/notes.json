@@ -35,5 +35,15 @@
         "date": "2026-03-20",
         "path": "/noter/organisation/organisationsteori.html",
         "excerpt": "Grundlæggende organisationsformer og ledelsesstruktur."
-    }
+    },
+    {
+  "id": "programmering-L18-webserver-api",
+  "title": "Webserver og API'er",
+  "subject": "programmering",
+  "lektion": "L18",
+  "tags": ["HTTP", "REST API", "Express.js", "Node.js", "CRUD"],
+  "date": "2026-03-23",
+  "path": "/noter/programmering/programmering-L18-2026-03-23-webserver-api.html",
+  "excerpt": "HTTP, Express.js og CRUD-operationer — backend-laget til eksamensopgaven."
+}
 ]
