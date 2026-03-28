@@ -1,34 +1,54 @@
 <!DOCTYPE html>
 <html lang="da">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Introduktion til IT-projektledelse</title>
-    <link rel="stylesheet" href="/css/note.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduktion til IT-projektledelse — Pensummit</title>
+  <meta name="description" content="Testnote: introduktion til IT-projektledelse." />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
 </head>
+<body data-fag="it-projektledelse">
 
-<body>
-    <div class="container">
-        <div class="nav-bar">
-            <a href="/">← Forside</a>
-            <span>IT-Projektledelse</span>
-            <a href="#" class="disabled">Næste →</a>
-        </div>
+  <header>
+    <a class="logo" href="/">Pensum<span>mit</span></a>
+    <nav>
+      <a href="/#it-projektledelse">IT-Projektledelse</a>
+      <a href="/#programmering">Programmering</a>
+      <a href="/#organisation">Organisation</a>
+      <a href="/#oekonomi">Økonomi</a>
+    </nav>
+  </header>
 
-        <div class="header">
-            <h1>Introduktion til IT-projektledelse</h1>
-            <div class="meta">03/02/2026 · Testnote</div>
-            <div class="tags">
-                <span class="tag">Projektledelse</span>
-                <span class="tag">Intro</span>
-            </div>
-            <div class="timestamp">Genereret som test</div>
-        </div>
+  <div class="note-page">
 
-        <h2>Opsummering</h2>
-        <p>Dette er en testnote.</p>
-    </div>
+    <nav class="note-nav">
+      <a href="#" class="disabled">← Forrige lektion</a>
+      <a href="/">🏠 Oversigt</a>
+      <a href="#" class="disabled">Næste lektion →</a>
+    </nav>
+
+    <header class="note-header">
+      <h1>Introduktion til IT-projektledelse</h1>
+      <p class="note-meta">IT-Projektledelse · 03/02/2026 · Testnote</p>
+      <div class="tags">
+        <span class="tag">Projektledelse</span>
+        <span class="tag">Intro</span>
+      </div>
+      <p class="timestamp">Genereret som test</p>
+    </header>
+
+    <h2>📋 Opsummering</h2>
+    <p>Dette er en testnote.</p>
+
+  </div>
+
+  <footer>
+    Pensummit &mdash; HA(it), CBS · <span id="year"></span>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
-
 </html>
